@@ -52,4 +52,56 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /*
+   * Snippt Premium-Theme (Dark Barbershop)
+   * Wird per Klasse auf den /demo-Layout-Root gelegt, damit shadcn-Komponenten
+   * (Card/Button/Badge etc.) automatisch im Premium-Look erscheinen, ohne die
+   * bestehenden App-Routen zu brechen.
+   *
+   * Palette:
+   *   Off-White  #F8F7F4 → bg
+   *   Tiefschwarz #0F0F0F → primary
+   *   Warmgold   #C9A84C → accent
+   *   Dunkelgrau #1C1C1E → text/foreground
+   */
+  .snippt-premium {
+    /* Hintergrund: Off-White */
+    --background: 40 22% 97%;
+    --foreground: 240 4% 11%;
+
+    /* Karten: leicht heller als bg, fast weiß, für sanfte Tiefe */
+    --card: 0 0% 100%;
+    --card-foreground: 240 4% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 4% 11%;
+
+    /* Primär: Tiefschwarz */
+    --primary: 0 0% 6%;
+    --primary-foreground: 40 22% 97%;
+
+    /* Sekundär: sehr dezentes Warmgrau auf Off-White-Basis */
+    --secondary: 36 14% 92%;
+    --secondary-foreground: 240 4% 11%;
+
+    --muted: 36 14% 92%;
+    --muted-foreground: 240 4% 35%;
+
+    /* Akzent: Warmgold */
+    --accent: 43 53% 54%;
+    --accent-foreground: 0 0% 6%;
+
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 40 22% 97%;
+
+    --border: 36 12% 86%;
+    --input: 36 12% 86%;
+    --ring: 43 53% 54%;
+
+    --radius: 0.75rem;
+
+    background-color: #F8F7F4;
+    color: #1C1C1E;
+  }
 }

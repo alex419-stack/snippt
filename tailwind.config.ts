@@ -42,6 +42,19 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Snippt Premium-Palette (Dark Barbershop)
+        // Rohe Hex-Tokens — verwendbar als bg-snippt-bg, text-snippt-text usw.
+        snippt: {
+          bg: "#F8F7F4",      // Off-White Hintergrund
+          primary: "#0F0F0F", // Tiefschwarz
+          accent: "#C9A84C",  // Warmgold
+          text: "#1C1C1E",    // Dunkelgrau
+        },
+        // Kurz-Aliase für die Premium-Palette (Geist-Style, knapp)
+        ink: "#0F0F0F",   // Tiefschwarz (=primary)
+        gold: "#C9A84C",  // Warmgold (=accent)
+        bone: "#F8F7F4",  // Off-White (=bg)
+        coal: "#1C1C1E",  // Dunkelgrau (=text)
       },
       borderRadius: {
         lg: "var(--radius)",
