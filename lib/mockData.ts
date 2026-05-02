@@ -29,6 +29,23 @@ export type Friseur = {
   spezialitaet: string
   /** Anteil Stammkunden an Gesamttermin-Volumen, 0..1 (z.B. 0.72 = 72%) */
   stammkunden_anteil: number
+  // ---- Personalbranding (Phase 0 Nachzug, vorbereitet für Wettbewerbs-Matrix in Phase 1) ----
+  /** 2-3 Sätze persönliche Vorstellung, deutsch */
+  bio: string
+  jahre_erfahrung: number
+  /** Stilrichtungen, z.B. ["Modern", "Klassisch", "Avantgarde"] */
+  stilrichtung: string[]
+  social_proof: {
+    /** 0..5, eine Nachkommastelle */
+    bewertung_durchschnitt?: number
+    bewertung_anzahl?: number
+    /** Handle inkl. "@", z.B. "@timschnitt" */
+    instagram?: string
+  }
+  /** 0..1 — wie stark der Friseur Walk-In-Kundschaft anzieht */
+  walk_in_magnet_score: number
+  /** Auslastungs-/Nachfrage-Trend der letzten 30 Tage */
+  trend_30_tage: 'wachsend' | 'stabil' | 'schrumpfend'
 }
 
 export type Termin = {
@@ -58,21 +75,50 @@ export const friseure: Friseur[] = [
     name: 'Marco Lehmann',
     foto: 'https://i.pravatar.cc/150?img=12',
     spezialitaet: 'Herrenschnitte & Bart',
-    stammkunden_anteil: 0.78,
+    stammkunden_anteil: 0.86,
+    bio: 'Seit 18 Jahren am Stuhl und immer noch jeden Morgen mit der gleichen Vorfreude. Klassisches Herren-Handwerk, präzise Konturen, ehrliche Bartpflege. Wer einmal bei mir war, kommt wieder.',
+    jahre_erfahrung: 18,
+    stilrichtung: ['Klassisch', 'Traditionell'],
+    social_proof: {
+      bewertung_durchschnitt: 4.9,
+      bewertung_anzahl: 312,
+    },
+    walk_in_magnet_score: 0.55,
+    trend_30_tage: 'stabil',
   },
   {
     id: 'f2',
     name: 'Sophie Wagner',
     foto: 'https://i.pravatar.cc/150?img=47',
     spezialitaet: 'Color & Strähnen',
-    stammkunden_anteil: 0.64,
+    stammkunden_anteil: 0.72,
+    bio: 'Color ist für mich kein Service, sondern Handwerk mit Charakter. Ob warmes Balayage oder mutiges Editorial — ich plane jede Farbe individuell auf Hautton und Haarstruktur. Termine lieber in Ruhe, dafür mit Ergebnis.',
+    jahre_erfahrung: 7,
+    stilrichtung: ['Modern', 'Editorial', 'Color'],
+    social_proof: {
+      bewertung_durchschnitt: 4.8,
+      bewertung_anzahl: 184,
+      instagram: '@sophie.haircolor',
+    },
+    walk_in_magnet_score: 0.30,
+    trend_30_tage: 'wachsend',
   },
   {
     id: 'f3',
     name: 'Jonas Kraus',
     foto: 'https://i.pravatar.cc/150?img=33',
     spezialitaet: 'Kurzhaarschnitte & Fades',
-    stammkunden_anteil: 0.52,
+    stammkunden_anteil: 0.45,
+    bio: 'Schnell, sauber, unkompliziert. Kurzhaarschnitte und Fades sind mein Ding — rein, frischer Look, raus. Spontan vorbeikommen geht meistens, lange Wartezeiten gibt es bei mir nicht.',
+    jahre_erfahrung: 3,
+    stilrichtung: ['Modern', 'Sportlich'],
+    social_proof: {
+      bewertung_durchschnitt: 4.6,
+      bewertung_anzahl: 67,
+      instagram: '@jonas.cuts',
+    },
+    walk_in_magnet_score: 0.85,
+    trend_30_tage: 'wachsend',
   },
 ]
 
