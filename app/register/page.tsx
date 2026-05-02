@@ -95,7 +95,7 @@ export default function RegisterPage() {
             <div className="space-y-1">
               <Label htmlFor="slug">Deine Buchungs-URL</Label>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground whitespace-nowrap">friseur-app.de/</span>
+                <span className="text-sm text-muted-foreground whitespace-nowrap">snippt.de/</span>
                 <Input
                   id="slug"
                   type="text"

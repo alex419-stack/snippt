@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
       <div className="text-center max-w-lg space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">Chairly</h1>
+        <h1 className="text-4xl font-bold tracking-tight">Snippt</h1>
         <p className="text-muted-foreground text-lg">
           Buche deinen Lieblingsfriseuer — schnell, einfach, ohne Anruf.
         </p>

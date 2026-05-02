@@ -3,7 +3,7 @@ import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Chairly',
+  title: 'Snippt',
   description: 'Buche deinen Lieblingsfriseuer — schnell, einfach, ohne Anruf.',
 }
 

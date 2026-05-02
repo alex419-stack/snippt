@@ -9,9 +9,9 @@
 
 - **App-Name:** Snippt
 - **Domains (zu sichern):** snippt.de, snippt.app
-- **Markenrechts-Check ausstehend:** DPMA Register + TMview EU vor Domain-Kauf
-- **Repository:** GitHub `alex419-stack/Chairly` (Umbenennung auf `snippt` ausstehend)
-- **Lokales Verzeichnis:** `/home/parallels/Desktop/friseur-app` (Umbenennung ausstehend)
+- **Markenrechts-Check:** ✅ erledigt (30.04.2026) — DPMA + TMview EU sauber
+- **Repository:** GitHub `alex419-stack/snippt` (umbenannt 30.04.2026)
+- **Lokales Verzeichnis:** `/home/parallels/Desktop/snippt` (umbenannt 30.04.2026)
 - **Vorheriger Arbeitsname:** Chairly (verworfen — Domains belegt, Markenkonflikt-Risiko)
 
 ---
@@ -134,7 +134,7 @@ salon (auth.users: salon_admin)
 
 ## Pre-M0 Tasks (vor Mockup-Start)
 
-- [ ] Markenrechts-Check `snippt`: DPMA Register + TMview EU
+- [x] Markenrechts-Check `snippt`: DPMA Register + TMview EU (erledigt 30.04.2026)
 - [ ] Domains `snippt.de` + `snippt.app` sichern (~25€/Jahr zusammen)
 - [ ] Resend.com Account anlegen (kostenlos)
 - [ ] Figma-Account anlegen (kostenlos)
@@ -173,7 +173,7 @@ Details: `KNOWN_ISSUES.md` im Projektverzeichnis.
 ## Querverweise
 
 - Alter MVP-Plan (Single-Tenant, **veraltet**, archivieren in M0): `/home/parallels/Desktop/friseur-app-mvp-plan.md`
-- Auto-Memory: `/home/parallels/.claude/projects/-home-parallels-Desktop/memory/project_friseur_app.md`
+- Auto-Memory: `/home/parallels/.claude/projects/-home-parallels-Desktop/memory/project_snippt.md`
 - Known Issues: `KNOWN_ISSUES.md`
 - Backlog: `BACKLOG.md`
 - Globale CLAUDE.md: `/home/parallels/.claude/CLAUDE.md`
