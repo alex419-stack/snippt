@@ -18,7 +18,11 @@
 
 ## Vision
 
-Premium-Buchungs-App für Salons mit mehreren Friseuren. Kern-USP: Stammkunden landen verlässlich bei IHREM Friseur, nicht beim ersten verfügbaren Kollegen. Walk-In und Vorab-Buchung gleichberechtigt. **Personalbranding pro Friseur**: jeder Friseur ist seine eigene Marke innerhalb der App, nicht ein austauschbarer Stuhl.
+Premium-Buchungs-App für **Long-Tail-Barbershops** (15-22€-Schnitte, türkische Barbershops, Quartiersfriseure, Migration-Salons) — eine Klasse Salons, die in keinem etablierten Buchungs-Tool (Fresha/Booksy/Planity/Shore/studiolution) registriert ist und heute von Walk-In + Telefon + Notizbuch lebt.
+
+Kern-USP: Stammkunden landen verlässlich bei IHREM Friseur, nicht beim ersten verfügbaren Kollegen. Walk-In und Vorab-Buchung gleichberechtigt. **Personalbranding pro Friseur**: jeder Friseur ist seine eigene Marke innerhalb der App, nicht ein austauschbarer Stuhl. **Conversion-Mechanik**: Snippt verwandelt Laufkundschaft systematisch in Stammkundschaft.
+
+**Zielgruppen-Refokus 02.05.2026:** Premium-Werkzeug zum Discount-Preis (€7/Friseur/Mo) für unterversorgten Markt — direkter Konkurrent ist nicht Fresha, sondern „Telefon + Notizbuch".
 
 **Wert für die drei Akteure:**
 
@@ -34,14 +38,16 @@ Premium-Buchungs-App für Salons mit mehreren Friseuren. Kern-USP: Stammkunden l
 
 | USP | Status | Pitch-Verwendung |
 |---|---|---|
-| Premium-Design (Cal.com/Stripe-Niveau) | **Killer-USP** — keine DACH-Alternative | hervorheben |
+| Premium-Design (Cal.com/Stripe-Niveau) | **Killer-USP, jetzt mit Spannungsbonus** zum €7-Preis | hervorheben („Stripe-Niveau zum Schnitt-Preis") |
 | Friseur-priorisierte Systemlogik (Personalbranding + Stammkunden-Erkennung) | **Killer-USP** — strukturelle Differenzierung | hervorheben |
+| **Laufkundschaft → Stammkundschaft als Conversion-Mechanik** | **Killer-USP für Long-Tail** (NEU 02.05.2026) | im Pitch zentral als Aufmacher |
 | Performance-Dashboard mit Wettbewerbs-Layer pro Friseur | starker Differenzierer | hervorheben |
-| Walk-In Live-Status (Echtzeit pro Friseur) | starker Differenzierer | als Verstärker |
+| Walk-In Live-Status (Echtzeit pro Friseur) | starker Differenzierer | als Verstärker — passt perfekt zur Walk-In-getriebenen Zielgruppe |
+| Premium-UX zum Discount-Preis | **NEU als Pitch-Asset** | zentrales Verkaufsargument |
 | DSGVO/DE-Stack | solide, kontextabhängig | situativ |
 | ~~Keine Provision~~ | **gestrichen** — Shore/studiolution/Planity/Booksy alle provisionsfrei = Erwartungsniveau | NICHT erwähnen |
 
-**Pitch-Storyline:** Stammkunden-Booking-Flow als Aufmacher → *„Dein Friseur Tim hat Donnerstag 15 Uhr frei."*
+**Pitch-Storyline (NEU 02.05.2026):** „Eure Laufkundschaft kommt rein, schneidet, geht — und ihr seht sie nie wieder. Snippt verwandelt sie in Stammkundschaft, mit Premium-UX zum Schnitt-Preis." Aufmacher = Friseur-Profilseite Endkundensicht. Pricing-Reveal („€7/Friseur/Mo = ein Schnitt pro Friseur und Monat") **erst nach** dem Wow-Moment.
 
 ---
 
@@ -51,8 +57,11 @@ Premium-Buchungs-App für Salons mit mehreren Friseuren. Kern-USP: Stammkunden l
 - Chairly→Snippt Rebrand ✅ committet (`1cd6980`)
 - Phase 0 Nachzug Personalbranding ✅ committet (`cb00ff7`)
 - **Pivot 30.04.2026:** Mockup wird als Next.js-Code im Repo gebaut (Branch `m0-mockup`), nicht in Figma — Alex kann den Stack bereits, Lernkurve in Code geringer
-- **Pivot 01.05.2026:** Build-Tool ist Claude Pro €18/Mo (NICHT Max) — Sub-Agents sparsam einsetzen
-- **Pivot 02.05.2026:** USP-Schärfung nach Researcher (Personalbranding als zusätzlicher Killer-USP, „keine Provision" gestrichen)
+- **Pivot 02.05.2026 (drei strukturelle Entscheidungen):**
+  - Build-Tool: Pro €18 → **Max 5x €92/Mo** (Pro-Limit real getroffen)
+  - Pricing: Korridor €15-45 → **€7/Friseur/Mo Pilot-Preis** als Fixzahl
+  - Zielgruppe: Mittel-/Premium-Salons → **Long-Tail-Barbershops** (15-22€-Schnitte)
+- USP-Schärfung 02.05.2026: Personalbranding + Conversion-Mechanik als zusätzliche Killer-USPs, „keine Provision" gestrichen
 - Bestehender Code aus Friseur-First-Vision (Single-Tenant) — wird in M1 auf Multi-Tenant refactored, nicht weiter ausbauen
 - Pilot-Salon: "Mein Friseur"-Salon, ohne Commit. Plan-B-Salon: noch zu identifizieren
 
@@ -90,7 +99,7 @@ salon (auth.users: salon_admin)
 
 | # | Thema | Entscheidung | Begründung |
 |---|-------|--------------|-----------|
-| 1 | Geschäftsmodell | Pricing-Korridor pro Friseur/Mo: Floor €15 / Mid €25-29 / Premium €35-45 — Researcher-Empfehlung: **€29 als Launch-Anker** | Skaliert fair mit Salongröße; final festsetzen nach Pilot-Salonchef-Reaktion |
+| 1 | Geschäftsmodell | **€7/Friseur/Monat Launch-Pilot-Preis** (Pivot 02.05.2026 — Long-Tail-Strategie). Finale Strategie (Lifetime/Volume/Stufenplan) nach M9-Erfolgsbewertung | No-Brainer-Niveau für Long-Tail-Barbershops mit dünner Marge |
 | 2 | Walk-In | Live-Status auf Tagesebene + Express-Buchung | 80% Wert bei 20% Aufwand |
 | 3 | Kalender | iCal-Export einseitig | Universell, kostenlos, robust |
 | 4 | Endkunden-Account | Soft-Account / Progressiv | Niedrige Hürde, Magic-Link beim 2. Termin |
@@ -99,7 +108,8 @@ salon (auth.users: salon_admin)
 | 7 | Sprachen | Nur Deutsch | DACH-Fokus, kein i18n-Overhead |
 | 8 | Mobile/Desktop | Salonchef Desktop, Friseur+Kunde Mobile-First | Nutzungsrealität |
 | 9 | Personalbranding | Friseur-als-Marke + natürlicher (positiv-gerahmter) Wettbewerb | Strategie-Pivot 02.05.2026 — Salonchef sieht Wettbewerbs-Matrix, Friseur sieht „Mein Brand"-Karte |
-| 10 | Build-Tool | **Claude Pro €18/Mo** (NICHT Max) — Sub-Agents sparsam, fokussierte Sessions | Alex-Direktive 01.05.2026, Eskalation auf Max 5x nur situativ |
+| 10 | Build-Tool | **Claude Max 5x ($100/€92 Mo)** — Pivot 02.05.2026 (Pro-Limit am 02.05. real getroffen) | Sub-Agent-Headroom verfügbar, Reviewer-als-Dritter aber sparsam; Eskalation auf Max 20x nur in kritischen Wochen |
+| 13 | Zielgruppe | **Long-Tail-Barbershops mit 15-22€-Schnitten** (Pivot 02.05.2026) | Konkurrenz dort nicht registriert — unbeackerter Markt; Pilot-Salon „Mein Friseur" passt |
 | 11 | Logo | Wortmarken-Style Geist Font in M2 | Pro-Logo erst nach Pilot-Erfolg |
 | 12 | Recht | IT-Recht-Generator (e-recht24.de) für AGB/DSE/Impressum | MVP-tauglich, anwaltlicher Review nach Pilot |
 
@@ -152,7 +162,7 @@ salon (auth.users: salon_admin)
 - Buchungen über App ≥30% aller Termine im Pilot
 - Walk-In-Anteil ≥10% aller App-Buchungen
 - Soft-Account-Adoption ≥40% der wiederkehrenden Kunden
-- Salonchef sagt "Ja" zu Pricing-Korridor (€25-35-Range)
+- Salonchef sagt "Ja" zu €7/Friseur/Mo Pilot-Preis
 - ≥60% der Pilot-Friseure sagen "weiternutzen"
 
 **Kill-Switch:** 3+ Kriterien unter Schwelle → Plan stoppen oder Vision-Pivot.
@@ -188,11 +198,11 @@ Details: `KNOWN_ISSUES.md` im Projektverzeichnis.
 - **Datenmodell-Änderungen:** Immer als SQL-Migration in `supabase/migrations/` — nicht direkt im Supabase Dashboard
 - **UI-Änderungen:** Premium-Design-Palette einhalten, Geist Font, keine Behörden-Optik
 - **Bei größeren Features:** Phase 1 (Strategischer Überblick) → Phase 2 (Aktionsplan) → erst dann Code (siehe globale CLAUDE.md)
-- **Subagenten gezielt und sparsam nutzen** (Pro-Limit-Disziplin):
+- **Subagenten gezielt nutzen** (Max-5x-Headroom, aber kein Freibrief):
   - `vision-manager-lead` bei strategischen Pivots oder Sparring
   - `code-reviewer` nach jedem signifikanten Code-Change (nicht für Mockup-UI)
   - `researcher` bei externer Recherche (DSGVO, APIs, Markt)
-  - **Nicht parallel zeitgleich beauftragen**, wenn vermeidbar — Tageslimit-Schutz
+  - Researcher + Coder parallel ist mit Max 5x okay; Reviewer-als-Dritter sparsam einsetzen
 - **Build-Disziplin:** `npm run build` muss grün bleiben nach jedem Meilenstein
 - **Manuelle UI-Tests:** Pro Meilenstein dokumentiert abschließen, nicht batchen
 - **Nicht ohne Plan bauen:** Wenn ein Code-Change >30 Min Aufwand → erst Plan mit Alex abstimmen
