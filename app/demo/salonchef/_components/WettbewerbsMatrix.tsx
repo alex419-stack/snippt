@@ -4,26 +4,18 @@ import type { Friseur } from '@/lib/mockData'
 /**
  * WettbewerbsMatrix — Hauptdarsteller der Salonchef-Sicht.
  *
- * Zeigt pro Friseur vier Personalbranding-Dimensionen nebeneinander:
- *   1. Identität     — Avatar, Name, Spezialität, Erfahrung
- *   2. Auslastung    — Bar 0–100%
- *   3. Stammkunden   — Anteil 0–100% mit Mini-Bar
- *   4. Walk-In-Magnet — 0–1 als Bar + Gold-Badge für den Spitzenwert
- *   5. 30-Tage-Trend — Pfeil + Wort-Label
+ * Dark-Mode-Anpassungen:
+ *   - bg-surface statt bg-white
+ *   - Bar-Track: bg-bone/8 (helles Geist-Weiß bei 8% auf dunkler Surface)
+ *   - Bar-Füllung: bg-ink (= Off-White im Dark Mode)
+ *   - Trend "wachsend": text-whiskey statt text-emerald-700 (Anti-Toxizität + Dark-Lesbarkeit)
+ *   - hover:bg-bone/5 (subtiler Hover-Tint auf dunkler Surface)
  *
- * Anti-Toxizitäts-Rahmung:
- *   - Kein Ranking 1./2./3.
- *   - Kein Rot, keine „Verlierer"-Markierung
- *   - Positive Hervorhebung: Gold-Badge nur am Spitzenreiter (Walk-In),
- *     dezente Trend-Pfeile, neutraler Kartenstil für alle
- *   - Sektions-Untertitel formuliert die Frage als Coaching-Aufgabe:
- *     „Wo unterstützt du dein Team?"
- *
- * Server Component. Hover-Effekt rein CSS — kein Click-Through im Mockup.
+ * Anti-Toxizitäts-Rahmung: kein Ranking, kein Rot.
+ * Server Component.
  */
 
 type FriseurMitAuslastung = Friseur & {
-  /** 0..1, vom Caller berechnet (z.B. aus Termin-Aggregation) */
   auslastung_woche: number
 }
 
@@ -32,15 +24,13 @@ export function WettbewerbsMatrix({
 }: {
   friseure: FriseurMitAuslastung[]
 }) {
-  // Spitzenreiter Walk-In-Magnet bestimmen — bekommt das Gold-Badge.
-  // Wir nutzen max(walk_in_magnet_score) und setzen das Badge nur einmal.
   const maxWalkIn = Math.max(...friseure.map((f) => f.walk_in_magnet_score))
 
   return (
     <section className="space-y-6">
       <header className="flex items-end justify-between gap-6">
         <div className="space-y-1.5">
-          <h2 className="font-sans text-2xl font-semibold tracking-tight text-ink">
+          <h2 className="text-h2 text-ink">
             Wo unterstützt du dein Team?
           </h2>
           <p className="text-sm text-coal/65">
@@ -53,9 +43,9 @@ export function WettbewerbsMatrix({
         </div>
       </header>
 
-      <div className="overflow-hidden rounded-2xl border border-coal/10 bg-white">
+      <div className="overflow-hidden rounded-2xl border border-bone/10 bg-surface">
         {/* Tabellen-Header (nur Desktop) */}
-        <div className="hidden grid-cols-[2.4fr_1.4fr_1.4fr_1.6fr_1fr] gap-6 border-b border-coal/10 px-6 py-3.5 text-[10.5px] font-medium uppercase tracking-[0.16em] text-coal/50 lg:grid">
+        <div className="hidden grid-cols-[2.4fr_1.4fr_1.4fr_1.6fr_1fr] gap-6 border-b border-bone/10 px-6 py-3.5 text-[10.5px] font-medium uppercase tracking-[0.16em] text-coal/50 lg:grid">
           <div>Friseur</div>
           <div>Auslastung</div>
           <div>Stammkundenanteil</div>
@@ -64,7 +54,7 @@ export function WettbewerbsMatrix({
         </div>
 
         {/* Zeilen */}
-        <div className="divide-y divide-coal/10">
+        <div className="divide-y divide-bone/10">
           {friseure.map((f) => (
             <FriseurZeile
               key={f.id}
@@ -78,8 +68,6 @@ export function WettbewerbsMatrix({
   )
 }
 
-// ---------- Zeile pro Friseur ----------
-
 function FriseurZeile({
   friseur,
   istWalkInSpitzenreiter,
@@ -89,14 +77,14 @@ function FriseurZeile({
 }) {
   return (
     <div
-      className="group grid cursor-pointer grid-cols-1 gap-5 px-6 py-5 transition-colors duration-150 hover:bg-bone/60 lg:grid-cols-[2.4fr_1.4fr_1.4fr_1.6fr_1fr] lg:items-center lg:gap-6"
+      className="group grid cursor-pointer grid-cols-1 gap-5 px-6 py-5 transition-colors duration-150 hover:bg-bone/5 lg:grid-cols-[2.4fr_1.4fr_1.4fr_1.6fr_1fr] lg:items-center lg:gap-6"
       title="Klick öffnet Friseur-Detail (im Mockup deaktiviert)"
     >
-      {/* Spalte 1: Identität */}
+      {/* Identität */}
       <div className="flex items-center gap-4">
         <div
           aria-hidden
-          className="h-12 w-12 shrink-0 rounded-full bg-cover bg-center ring-1 ring-coal/15"
+          className="h-12 w-12 shrink-0 rounded-full bg-cover bg-center ring-1 ring-bone/15"
           style={{ backgroundImage: `url(${friseur.foto})` }}
         />
         <div className="min-w-0">
@@ -111,27 +99,27 @@ function FriseurZeile({
         </div>
       </div>
 
-      {/* Spalte 2: Auslastung */}
+      {/* Auslastung */}
       <KennzahlBar
         wertProzent={Math.round(friseur.auslastung_woche * 100)}
         mobileLabel="Auslastung"
       />
 
-      {/* Spalte 3: Stammkundenanteil */}
+      {/* Stammkundenanteil */}
       <KennzahlBar
         wertProzent={Math.round(friseur.stammkunden_anteil * 100)}
         mobileLabel="Stammkunden"
       />
 
-      {/* Spalte 4: Walk-In-Magnet (Bar + optionales Gold-Badge) */}
+      {/* Walk-In-Magnet */}
       <div className="space-y-1.5">
         <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-coal/55 lg:hidden">
           Walk-In-Magnet
         </div>
         <div className="flex items-center gap-2.5">
-          <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-coal/8">
+          <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-bone/8">
             <div
-              className="absolute inset-y-0 left-0 rounded-full bg-ink/85"
+              className="absolute inset-y-0 left-0 rounded-full bg-bone/85"
               style={{ width: `${friseur.walk_in_magnet_score * 100}%` }}
             />
           </div>
@@ -140,7 +128,7 @@ function FriseurZeile({
           </div>
           {istWalkInSpitzenreiter && (
             <span
-              className="inline-flex items-center gap-1 rounded-full border border-gold/40 bg-gold/12 px-2 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.12em] text-gold"
+              className="inline-flex items-center gap-1 rounded-full border border-whiskey/40 bg-whiskey/12 px-2 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.12em] text-whiskey"
               title="Stärkste Walk-In-Anziehung im Team"
             >
               <Sparkles className="h-3 w-3" strokeWidth={2.25} />
@@ -150,13 +138,11 @@ function FriseurZeile({
         </div>
       </div>
 
-      {/* Spalte 5: 30-Tage-Trend */}
+      {/* Trend */}
       <TrendIndikator trend={friseur.trend_30_tage} />
     </div>
   )
 }
-
-// ---------- Hilfs-Komponenten ----------
 
 function KennzahlBar({
   wertProzent,
@@ -171,7 +157,7 @@ function KennzahlBar({
         {mobileLabel}
       </div>
       <div className="flex items-center gap-2.5">
-        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-coal/8">
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-bone/8">
           <div
             className="absolute inset-y-0 left-0 rounded-full bg-ink"
             style={{ width: `${wertProzent}%` }}
@@ -190,13 +176,12 @@ function TrendIndikator({
 }: {
   trend: 'wachsend' | 'stabil' | 'schrumpfend'
 }) {
-  // Anti-Toxizität: schrumpfend ist nicht rot, sondern dezent grau —
-  // Salonchef soll nachdenklich, nicht alarmiert werden.
   const config = {
     wachsend: {
       Icon: TrendingUp,
       label: 'Wachsend',
-      farbe: 'text-emerald-700',
+      // gold statt emerald-700 — auf dunklem BG lesbar + im Design-System
+      farbe: 'text-whiskey',
     },
     stabil: {
       Icon: Minus,

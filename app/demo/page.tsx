@@ -6,7 +6,7 @@ import { meinSalon } from '@/lib/mockData'
  * /demo Hub
  *
  * Einstiegs-Karte für den Pitch: 4 Sichten, je eine Kachel.
- * Jede Kachel beschreibt Akteur und Sicht in einem Satz.
+ * "Snippt" als Display-Headline in Playfair Display Serif.
  */
 
 type DemoTile = {
@@ -52,13 +52,18 @@ export default function DemoHubPage() {
     <div className="space-y-16">
       {/* Header / Wortmarke */}
       <header className="space-y-6">
-        <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-coal/60">
-          <span className="h-px w-8 bg-gold" />
+        <div className="flex items-center gap-3 label-caps text-whiskey">
+          <span className="h-px w-8 bg-whiskey" />
           Hi-Fi Mockup · M0
         </div>
-        <h1 className="font-sans text-7xl font-semibold tracking-tight text-ink md:text-8xl">
-          Snippt
-        </h1>
+        <div className="flex items-center gap-5">
+          {/* Barbershop-Akzent: Rot · (Cream-Lücke = Weiß) · Blau */}
+          <div className="flex h-14 flex-shrink-0 items-stretch gap-[7px]">
+            <div className="w-[4px] rounded-full bg-[#C0392B]" />
+            <div className="w-[4px] rounded-full bg-[#2E4A6B]" />
+          </div>
+          <h1 className="text-display text-ink">Snippt</h1>
+        </div>
         <p className="max-w-2xl text-lg leading-relaxed text-coal/75 md:text-xl">
           Premium-Buchung für{' '}
           <span className="font-medium text-ink">{meinSalon.name}</span>.
@@ -73,13 +78,13 @@ export default function DemoHubPage() {
           <Link
             key={t.href}
             href={t.href}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-coal/10 bg-white p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-coal/20 hover:shadow-[0_12px_40px_-12px_rgba(15,15,15,0.18)]"
+            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-bone/10 bg-surface p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-bone/20 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.5)]"
           >
             <div className="space-y-4">
-              <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-gold">
+              <div className="label-caps text-whiskey">
                 {t.akteur}
               </div>
-              <h2 className="font-sans text-2xl font-semibold tracking-tight text-ink">
+              <h2 className="text-h2 text-ink">
                 {t.titel}
               </h2>
               <p className="text-sm leading-relaxed text-coal/70">
@@ -99,7 +104,7 @@ export default function DemoHubPage() {
       </section>
 
       {/* Footer-Notiz */}
-      <footer className="border-t border-coal/10 pt-6 text-xs text-coal/50">
+      <footer className="border-t border-bone/10 pt-6 text-xs text-coal/50">
         Mockup mit Demo-Daten — keine echten Termine, keine Anbindung an
         Backend.
       </footer>

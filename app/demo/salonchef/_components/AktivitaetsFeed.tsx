@@ -8,11 +8,10 @@ import {
 import type { ComponentType } from 'react'
 
 /**
- * AktivitaetsFeed — letzte 5–8 Demo-Events als kompakte Liste.
+ * AktivitaetsFeed — letzte Demo-Events als kompakte Liste.
  *
- * Reine Hardcoded-Daten — soll im Pitch das Gefühl von „lebendigem
- * Dashboard" geben, ohne dass echte Logik dahinter steckt.
- *
+ * Dark-Mode: bg-surface statt bg-white, hover:bg-bone/5 statt hover:bg-bone/60.
+ * text-whiskey statt text-emerald-700 (auf dunklem BG lesbar + Design-System-konsistent).
  * Server Component.
  */
 
@@ -22,7 +21,7 @@ type FeedEvent = {
   id: string
   typ: EventTyp
   text: string
-  zeit: string // „vor 4 Min", „09:42", o.ä.
+  zeit: string
 }
 
 const EVENTS: FeedEvent[] = [
@@ -79,18 +78,18 @@ const ICONS: Record<EventTyp, ComponentType<{ className?: string }>> = {
 }
 
 const ICON_FARBEN: Record<EventTyp, string> = {
-  termin: 'text-coal/70',
-  walkin: 'text-gold',
-  stammkunde: 'text-emerald-700',
+  termin:      'text-coal/70',
+  walkin:      'text-whiskey',
+  stammkunde:  'text-whiskey/70',  // gold/70 statt emerald-700 — auf Dark lesbar
   meilenstein: 'text-ink',
-  feedback: 'text-gold',
+  feedback:    'text-whiskey',
 }
 
 export function AktivitaetsFeed() {
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-coal/10 bg-white p-6">
+    <section className="flex h-full flex-col rounded-2xl border border-bone/10 bg-surface p-6">
       <header className="mb-4 space-y-1.5">
-        <h2 className="font-sans text-xl font-semibold tracking-tight text-ink">
+        <h2 className="text-h3 text-ink">
           Aktivität
         </h2>
         <p className="text-sm text-coal/65">Letzte Ereignisse im Salon</p>
@@ -102,9 +101,9 @@ export function AktivitaetsFeed() {
           return (
             <li
               key={e.id}
-              className="-mx-2 flex items-start gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-bone/60"
+              className="-mx-2 flex items-start gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-bone/5"
             >
-              <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-bone">
+              <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-bone/8">
                 <Icon className={`h-3.5 w-3.5 ${ICON_FARBEN[e.typ]}`} />
               </div>
               <div className="min-w-0 flex-1">

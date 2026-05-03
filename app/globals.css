@@ -3,105 +3,120 @@
 @tailwind utilities;
 
 @layer base {
+  /* ── Light-Mode Defaults ─────────────────────────────────────────────────
+   *
+   * Zwei parallele Token-Systeme:
+   *   shadcn-Tokens (--background, --card, etc.) im HSL-Format
+   *   Snippt-Tokens (--tw-ink, --tw-bone, etc.) im RGB space-separated Format
+   *
+   * shadcn-Komponenten lesen die HSL-Vars, eigene Komponenten die RGB-Vars.
+   * Beide werden in .snippt-premium für Dark Mode überschrieben.
+   */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* shadcn (HSL) */
+    --background: 36 20% 94%;   /* #F5F3EF Warm Cream */
+    --foreground: 0 0% 6%;      /* #0F0F0F Tiefschwarz */
+    --card: 36 33% 97%;         /* #FAF9F7 Helles Cream für Cards */
+    --card-foreground: 0 0% 6%;
+    --popover: 36 33% 97%;
+    --popover-foreground: 0 0% 6%;
+    --primary: 0 0% 6%;
+    --primary-foreground: 36 20% 94%;
+    --secondary: 36 15% 90%;
+    --secondary-foreground: 0 0% 6%;
+    --muted: 36 15% 90%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 36 15% 90%;
+    --accent-foreground: 0 0% 6%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --destructive-foreground: 36 20% 94%;
+    --border: 36 12% 85%;       /* #DDD9D3 Warme Trennlinie */
+    --input: 36 12% 85%;
+    --ring: 25 37% 38%;         /* Whiskey Brown */
+    --radius: 0.75rem;
+
+    /* Snippt-Palette (RGB space-separated, für Tailwind opacity-Syntax) */
+    --tw-ink:     15 15 15;      /* #0F0F0F Tiefschwarz */
+    --tw-bone:    15 15 15;      /* Borders/Overlays auf hellem Grund → dunkel */
+    --tw-coal:    60 55 50;      /* #3C3732 Warm-Dunkelbraun als Sekundärtext */
+    --tw-surface: 250 249 247;   /* #FAF9F7 Helles Cream für Cards */
   }
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+
+  /* ── Snippt Premium — Dark Barbershop Theme ──────────────────────────────
+   *
+   * Wird auf <body> gelegt (app/layout.tsx) → global dark.
+   *
+   * Palette:
+   *   #0F0E0B Warm-Black   → Background (bone)
+   *   #1C1B18 Dark Surface → Cards/Panels (surface)
+   *   #F5F3EF Off-White    → Primärtext (ink)
+   *   #9C9A96 Warm-Gray    → Sekundärtext (coal)
+   *   #C9A84C Warmgold     → Akzent (gold, unverändert)
+   */
+  .snippt-premium {
+    /* shadcn (HSL) — Dark */
+    --background:             30 5% 6%;      /* #0F0E0B */
+    --foreground:             40 20% 96%;    /* #F5F3EF */
+    --card:                   30 5% 11%;     /* #1C1B18 */
+    --card-foreground:        40 20% 96%;
+    --popover:                30 5% 11%;
+    --popover-foreground:     40 20% 96%;
+    --primary:                40 20% 96%;    /* Off-White als Primary-Aktion */
+    --primary-foreground:     30 5% 6%;
+    --secondary:              30 5% 16%;     /* Etwas heller als Card */
+    --secondary-foreground:   40 20% 96%;
+    --muted:                  30 5% 16%;
+    --muted-foreground:       30 3% 60%;     /* #9C9A96 */
+    --accent:                 43 50% 54%;    /* Warmgold */
+    --accent-foreground:      30 5% 6%;
+    --destructive:            0 70% 45%;
+    --destructive-foreground: 40 20% 96%;
+    --border:                 40 10% 15%;    /* Subtile warme Border */
+    --input:                  40 10% 15%;
+    --ring:                   43 50% 54%;    /* Gold-Ring bei Focus */
+    --radius:                 0.75rem;
+
+    /* Snippt-Palette (RGB) — Dark-Varianten */
+    --tw-ink:     245 243 239;   /* #F5F3EF Off-White (Primärtext) */
+    --tw-bone:    15 14 11;      /* #0F0E0B Warm-Black (Background) */
+    --tw-coal:    156 154 150;   /* #9C9A96 Warm-Midgray (Sekundär) */
+    --tw-surface: 28 27 24;      /* #1C1B18 Dark Surface (Cards) */
+
+    background-color: #0F0E0B;
+    color: #F5F3EF;
   }
+
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
 
-  /*
-   * Snippt Premium-Theme (Dark Barbershop)
-   * Wird per Klasse auf den /demo-Layout-Root gelegt, damit shadcn-Komponenten
-   * (Card/Button/Badge etc.) automatisch im Premium-Look erscheinen, ohne die
-   * bestehenden App-Routen zu brechen.
-   *
-   * Palette:
-   *   Off-White  #F8F7F4 → bg
-   *   Tiefschwarz #0F0F0F → primary
-   *   Warmgold   #C9A84C → accent
-   *   Dunkelgrau #1C1C1E → text/foreground
-   */
-  .snippt-premium {
-    /* Hintergrund: Off-White */
-    --background: 40 22% 97%;
-    --foreground: 240 4% 11%;
-
-    /* Karten: leicht heller als bg, fast weiß, für sanfte Tiefe */
-    --card: 0 0% 100%;
-    --card-foreground: 240 4% 11%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 4% 11%;
-
-    /* Primär: Tiefschwarz */
-    --primary: 0 0% 6%;
-    --primary-foreground: 40 22% 97%;
-
-    /* Sekundär: sehr dezentes Warmgrau auf Off-White-Basis */
-    --secondary: 36 14% 92%;
-    --secondary-foreground: 240 4% 11%;
-
-    --muted: 36 14% 92%;
-    --muted-foreground: 240 4% 35%;
-
-    /* Akzent: Warmgold */
-    --accent: 43 53% 54%;
-    --accent-foreground: 0 0% 6%;
-
-    --destructive: 0 70% 45%;
-    --destructive-foreground: 40 22% 97%;
-
-    --border: 36 12% 86%;
-    --input: 36 12% 86%;
-    --ring: 43 53% 54%;
-
-    --radius: 0.75rem;
-
-    background-color: #F8F7F4;
-    color: #1C1C1E;
+/* ── Typografie-Helfer ───────────────────────────────────────────────────
+ *
+ * Playfair Display (font-serif): Brand-Wörter, Display-Headlines, H1, H2,
+ *   Eigennamen in Brand-Karten.
+ *
+ * Geist Sans (font-sans): Labels, KPI-Werte, Buttons, Inputs, Badges,
+ *   Zeit-Angaben, Notizen, Fließtext — alles operative UI.
+ */
+@layer components {
+  .text-display {
+    @apply font-serif text-7xl font-semibold tracking-tight md:text-8xl;
+  }
+  .text-h1 {
+    @apply font-serif text-4xl font-semibold tracking-tight md:text-5xl;
+  }
+  .text-h2 {
+    @apply font-serif text-2xl font-semibold tracking-tight;
+  }
+  .text-h3 {
+    @apply font-sans text-lg font-semibold tracking-tight;
+  }
+  .label-caps {
+    @apply font-sans text-[11px] font-medium uppercase tracking-[0.18em];
   }
 }

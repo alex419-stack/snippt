@@ -9,6 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // shadcn CSS-Variablen (HSL)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -42,19 +43,20 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Snippt Premium-Palette (Dark Barbershop)
-        // Rohe Hex-Tokens — verwendbar als bg-snippt-bg, text-snippt-text usw.
-        snippt: {
-          bg: "#F8F7F4",      // Off-White Hintergrund
-          primary: "#0F0F0F", // Tiefschwarz
-          accent: "#C9A84C",  // Warmgold
-          text: "#1C1C1E",    // Dunkelgrau
-        },
-        // Kurz-Aliase für die Premium-Palette (Geist-Style, knapp)
-        ink: "#0F0F0F",   // Tiefschwarz (=primary)
-        gold: "#C9A84C",  // Warmgold (=accent)
-        bone: "#F8F7F4",  // Off-White (=bg)
-        coal: "#1C1C1E",  // Dunkelgrau (=text)
+
+        // Snippt Premium-Palette — CSS-variablen-basiert für Dark/Light-Switching.
+        // Syntax rgb(var(--tw-X) / <alpha-value>) aktiviert Tailwind-Opacity-Modifikatoren
+        // (z.B. text-ink/65, bg-surface/40). Werte in globals.css definiert als
+        // space-separated RGB (kein rgb()-Wrapper im CSS-Wert).
+        ink:     "rgb(var(--tw-ink) / <alpha-value>)",
+        bone:    "rgb(var(--tw-bone) / <alpha-value>)",
+        coal:    "rgb(var(--tw-coal) / <alpha-value>)",
+        surface: "rgb(var(--tw-surface) / <alpha-value>)",
+        whiskey: "#8B5E3C",  // Whiskey Brown — Barbershop-Akzent, ersetzt Gold
+      },
+      fontFamily: {
+        // Playfair Display für Headlines/Brand-Wörter, mit San-Serif-Fallback
+        serif: ["var(--font-serif)", "Georgia", "Times New Roman", "serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 /**
- * Geteilter Placeholder für Screens, die in späteren Phasen ausgebaut werden.
- * Liegt unter app/demo/_components/* — Unterstrich = privat, kein Routing.
+ * Placeholder für Screens, die in späteren Phasen ausgebaut werden.
+ * H1 in Playfair Display Serif, bg-surface statt bg-white/60.
  */
 export function PlaceholderScreen({
   titel,
@@ -25,24 +25,24 @@ export function PlaceholderScreen({
       </Link>
 
       <header className="space-y-4">
-        <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-gold">
+        <div className="label-caps text-whiskey">
           {akteur}
         </div>
-        <h1 className="font-sans text-5xl font-semibold tracking-tight text-ink md:text-6xl">
+        <h1 className="text-h1 text-ink md:text-5xl">
           {titel}
         </h1>
       </header>
 
-      <div className="rounded-2xl border border-dashed border-coal/20 bg-white/60 px-8 py-16 text-center">
+      <div className="rounded-2xl border border-dashed border-bone/20 bg-surface px-8 py-16 text-center">
         <div className="mx-auto max-w-md space-y-3">
-          <div className="text-xs font-medium uppercase tracking-[0.18em] text-coal/50">
+          <div className="label-caps text-coal/50">
             In Arbeit
           </div>
           <p className="text-base text-coal/70">
             Dieser Screen wird in{' '}
             <span className="font-medium text-ink">{phase}</span>{' '}
             ausgearbeitet. Daten und Layout sind in{' '}
-            <code className="rounded bg-coal/5 px-1.5 py-0.5 font-mono text-sm text-ink">
+            <code className="rounded bg-bone/8 px-1.5 py-0.5 font-mono text-sm text-ink">
               lib/mockData.ts
             </code>{' '}
             bereits vorbereitet.

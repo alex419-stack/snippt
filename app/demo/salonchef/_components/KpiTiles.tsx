@@ -1,23 +1,21 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 /**
- * KpiTiles — vier Kennzahlen-Kacheln nebeneinander auf Desktop, 2x2 auf Tablet.
+ * KpiTiles — vier Kennzahlen-Kacheln.
  *
- * Jede Kachel: kleiner Label-Text oben, großer Wert mittig,
- * dezenter Trend-Vergleich „vs. Vorwoche" mit Pfeil-Icon in Akzentfarbe.
- *
- * Server Component, alle Werte werden als Props reingereicht — die
- * Aggregation passiert in der Page-Komponente, damit hier 0 Logik liegt.
+ * bg-surface statt bg-white — reagiert auf Dark/Light-Token.
+ * Hover-Shadow für dunklen Hintergrund angepasst (größerer Spread, dunklere Farbe).
+ * Server Component.
  */
 
 type Trend = {
-  delta: number // +8 | -3 | 0
-  label: string // „vs. Vorwoche"
+  delta: number
+  label: string
 }
 
 export type Kpi = {
   label: string
-  wert: string // bereits formatiert, z.B. "9", "4.280 €", "78 %"
+  wert: string
   trend?: Trend
 }
 
@@ -27,9 +25,9 @@ export function KpiTiles({ kpis }: { kpis: Kpi[] }) {
       {kpis.map((kpi) => (
         <article
           key={kpi.label}
-          className="group relative overflow-hidden rounded-2xl border border-coal/10 bg-white p-6 transition-all duration-200 hover:border-coal/20 hover:shadow-[0_8px_28px_-12px_rgba(15,15,15,0.12)]"
+          className="group relative overflow-hidden rounded-2xl border border-bone/10 bg-surface p-6 transition-all duration-200 hover:border-bone/20 hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)]"
         >
-          <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-coal/55">
+          <div className="label-caps text-coal/55">
             {kpi.label}
           </div>
           <div className="mt-4 flex items-baseline justify-between gap-3">
@@ -49,14 +47,12 @@ function TrendBadge({ trend }: { trend: Trend }) {
   const negativ = trend.delta < 0
   const neutral = trend.delta === 0
 
-  // Vorzeichen explizit, damit „+8%" lesbar bleibt
   const vorzeichen = positiv ? '+' : negativ ? '' : '±'
   const text = `${vorzeichen}${trend.delta}%`
 
-  // Anti-Toxizität: positiv = warmgold (Akzent), negativ = dezentes Coal,
-  // niemals Rot — wir wollen keine Alarm-Stimmung im Pitch.
+  // Anti-Toxizität: positiv = gold, negativ = dezentes coal, niemals Rot
   const farbe = positiv
-    ? 'text-gold'
+    ? 'text-whiskey'
     : negativ
       ? 'text-coal/55'
       : 'text-coal/45'

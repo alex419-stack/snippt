@@ -9,7 +9,7 @@
 
 - **App-Name:** Snippt
 - **Domains (zu sichern):** snippt.de, snippt.app
-- **Markenrechts-Check:** ✅ erledigt (30.04.2026) — DPMA + TMview EU sauber
+- **Markenrechts-Check:**  erledigt (30.04.2026) — DPMA + TMview EU sauber
 - **Repository:** GitHub `alex419-stack/snippt` (umbenannt 30.04.2026)
 - **Lokales Verzeichnis:** `/home/parallels/Desktop/snippt` (umbenannt 30.04.2026)
 - **Vorheriger Arbeitsname:** Chairly (verworfen — Domains belegt, Markenkonflikt-Risiko)
