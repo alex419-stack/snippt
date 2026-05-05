@@ -11,11 +11,11 @@ export function BuchungsHeader({ friseur }: { friseur: Friseur }) {
   return (
     <div className="space-y-6">
       <Link
-        href="/demo/kunde/walkin"
+        href="/demo/kunde/profil"
         className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-coal/50 transition-colors hover:text-ink"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        Zurück zum Live-Status
+        Zurück zum Profil
       </Link>
 
       <header className="border-b border-bone/10 pb-6">

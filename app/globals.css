@@ -33,7 +33,7 @@
     --destructive-foreground: 36 20% 94%;
     --border: 36 12% 85%;
     --input: 36 12% 85%;
-    --ring: 43 50% 54%;         /* Warmgold */
+    --ring: 26 40% 39%;         /* Kupfer/Mahagoni */
     --radius: 0.75rem;
 
     /* Snippt-Palette — Light */
@@ -41,6 +41,7 @@
     --tw-bone:    15 14 11;      /* Near-Black — border-bone/15 = zarte dunkle Linie auf Cream */
     --tw-coal:    60 55 50;      /* #3C3732 Warm-Dunkelbraun — Sekundärtext */
     --tw-surface: 250 249 247;   /* #FAF9F7 Helles Cream — Cards */
+    --tw-gold:    139 94 60;     /* #8B5E3C Kupfer/Mahagoni — Akzent Light */
   }
 
   /* ── theme-light ─────────────────────────────────────────────────────────
@@ -66,12 +67,13 @@
     --destructive-foreground: 36 20% 94%;
     --border: 36 12% 85%;
     --input: 36 12% 85%;
-    --ring: 43 50% 54%;
+    --ring: 26 40% 39%;         /* Kupfer/Mahagoni */
 
     --tw-ink:     15 15 15;
     --tw-bone:    15 14 11;
     --tw-coal:    60 55 50;
     --tw-surface: 250 249 247;
+    --tw-gold:    139 94 60;     /* #8B5E3C Kupfer/Mahagoni */
 
     background-color: hsl(36, 20%, 94%);
     color: hsl(0, 0%, 6%);
@@ -111,6 +113,7 @@
     --tw-bone:    245 243 239;   /* Near-White — border-bone/15 = zarte helle Linie auf Dark */
     --tw-coal:    156 154 150;   /* #9C9A96 Warm-Midgray — Sekundärtext */
     --tw-surface: 28 27 24;      /* #1C1B18 Dark Surface — Cards */
+    --tw-gold:    201 168 76;    /* #C9A84C Warmgold — Akzent Dark (Friseur-Route) */
 
     background-color: hsl(30, 5%, 6%);
     color: hsl(40, 20%, 96%);

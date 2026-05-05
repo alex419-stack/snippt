@@ -52,7 +52,7 @@ const config: Config = {
         bone:    "rgb(var(--tw-bone) / <alpha-value>)",
         coal:    "rgb(var(--tw-coal) / <alpha-value>)",
         surface: "rgb(var(--tw-surface) / <alpha-value>)",
-        gold: "#C9A84C",     // Warmgold — Barbershop-Akzent
+        gold: "rgb(var(--tw-gold) / <alpha-value>)",  // Kupfer (light) / Warmgold (dark) — per CSS-Var dual-mode
       },
       fontFamily: {
         sans:  ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],

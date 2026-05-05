@@ -4,8 +4,18 @@ import { ArrowUpRight } from 'lucide-react'
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-20">
-      <div className="w-full max-w-lg space-y-10 text-center">
-        {/* Gold-Akzent-Linie */}
+      <div className="w-full max-w-2xl space-y-10 text-center">
+
+        {/* Barber-Stripe — Rot / Weiß / Blau */}
+        <div className="flex justify-center">
+          <div className="flex h-[3px] w-24 overflow-hidden rounded-full">
+            <div className="flex-1 bg-[#C8201E]" />
+            <div className="flex-1 bg-bone/25" />
+            <div className="flex-1 bg-[#1A3A8F]" />
+          </div>
+        </div>
+
+        {/* Label */}
         <div className="flex justify-center">
           <div className="flex items-center gap-3 label-caps text-gold">
             <span className="h-px w-8 bg-gold" />
@@ -15,9 +25,14 @@ export default function HomePage() {
         </div>
 
         {/* Wordmark */}
-        <h1 className="text-display text-ink">
-          Snippt
-        </h1>
+        <h1 className="text-display text-ink">Snippt</h1>
+
+        {/* Barbershop Hero-Grafik */}
+        <img
+          src="/barbershop-hero.png"
+          alt="Snippt Barbershop"
+          className="w-full"
+        />
 
         {/* Tagline */}
         <p className="text-lg leading-relaxed text-coal/70">

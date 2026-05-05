@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { meinSalon } from '@/lib/mockData'
-import { BarberPolePair } from './_components/BarberPole'
 
 /**
  * /demo Hub
@@ -33,6 +32,13 @@ const tiles: DemoTile[] = [
       'Eigener Tag, nächster Stammkunde mit Foto und Notiz. Kein Salon-Sammelsurium, sondern persönliche Sicht.',
   },
   {
+    href: '/demo/kunde/profil',
+    titel: 'Friseur-Profil',
+    akteur: 'Endkunde · QR-Code-Einstieg · Mobile',
+    beschreibung:
+      'Kunde scannt QR-Code nach dem Schnitt — landet beim Profil seines Friseurs, bucht den nächsten Termin, legt ein Konto an. Der Moment, in dem Laufkundschaft zu Stammkundschaft wird.',
+  },
+  {
     href: '/demo/kunde/walkin',
     titel: 'Walk-In Live-Status',
     akteur: 'Endkunde · Mobile',
@@ -53,13 +59,29 @@ export default function DemoHubPage() {
     <div className="space-y-16">
       {/* Header / Wortmarke */}
       <header className="space-y-6">
+
+        {/* Barber-Stripe — Rot / Weiß / Blau */}
+        <div className="flex h-[3px] w-24 overflow-hidden rounded-full">
+          <div className="flex-1 bg-[#C8201E]" />
+          <div className="flex-1 bg-bone/25" />
+          <div className="flex-1 bg-[#1A3A8F]" />
+        </div>
+
         <div className="flex items-center gap-3 label-caps text-gold">
           <span className="h-px w-8 bg-gold" />
           Hi-Fi Mockup · M0
         </div>
-        <BarberPolePair height={72}>
-          <h1 className="text-display text-ink">Snippt</h1>
-        </BarberPolePair>
+
+        {/* Wordmark */}
+        <h1 className="text-display text-ink">Snippt</h1>
+
+        {/* Barbershop Hero-Grafik */}
+        <img
+          src="/barbershop-hero.png"
+          alt="Snippt Barbershop"
+          className="w-full max-w-2xl"
+        />
+
         <p className="max-w-2xl text-lg leading-relaxed text-coal/75 md:text-xl">
           Premium-Buchung für{' '}
           <span className="font-medium text-ink">{meinSalon.name}</span>.
@@ -74,7 +96,7 @@ export default function DemoHubPage() {
           <Link
             key={t.href}
             href={t.href}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-bone/10 bg-surface p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-bone/20 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.5)]"
+            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-bone/10 bg-surface p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-bone/20 hover:shadow-[0_8px_28px_-8px_rgba(0,0,0,0.09)]"
           >
             <div className="space-y-4">
               <div className="label-caps text-gold">

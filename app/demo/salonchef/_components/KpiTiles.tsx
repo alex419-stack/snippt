@@ -25,7 +25,7 @@ export function KpiTiles({ kpis }: { kpis: Kpi[] }) {
       {kpis.map((kpi) => (
         <article
           key={kpi.label}
-          className="group relative overflow-hidden rounded-2xl border border-bone/10 bg-surface p-6 transition-all duration-200 hover:border-bone/20 hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)]"
+          className="group relative overflow-hidden rounded-2xl border border-bone/10 bg-surface p-6 transition-all duration-200 hover:border-bone/20 hover:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.09)]"
         >
           <div className="label-caps text-coal/55">
             {kpi.label}

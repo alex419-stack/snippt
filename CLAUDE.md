@@ -127,8 +127,8 @@ salon (auth.users: salon_admin)
 |-------|-------|
 | `/demo/kunde/*` | Light (Warm Cream) |
 | `/demo/friseur/*` | Dark (Warm Black) |
-| `/demo/salonchef/*` | Dark (Warm Black) |
-| `/demo` Hub | Dark |
+| `/demo/salonchef/*` | Light (Warm Cream) — geändert 05.05.2026 |
+| `/demo` Hub | Light (Warm Cream) — geändert 05.05.2026 |
 | `/`, `/login`, `/register` | Light (`:root` Default) |
 
 ### Light Mode (Endkunde)
@@ -140,7 +140,7 @@ salon (auth.users: salon_admin)
 | `ink` | `#0F0F0F` | Primärtext |
 | `coal` | `#3C3732` | Sekundärtext (Warmes Dunkelbraun) |
 | `bone` | near-black `15 14 11` | Nur für Borders: `border-bone/15` = zarte dunkle Linie |
-| `gold` | `#C9A84C` | Akzent (Warmgold) |
+| `gold` | `#8B5E3C` | Akzent (Kupfer/Mahagoni) — Light-Mode |
 
 ### Dark Mode (Friseur, Salonchef)
 
@@ -151,7 +151,7 @@ salon (auth.users: salon_admin)
 | `ink` | `#F5F3EF` | Primärtext (Off-White) |
 | `coal` | `#9C9A96` | Sekundärtext (Warm Midgray) |
 | `bone` | near-white `245 243 239` | Nur für Borders: `border-bone/15` = zarte helle Linie |
-| `gold` | `#C9A84C` | Akzent (identisch in beiden Themes) |
+| `gold` | `#C9A84C` | Akzent (Warmgold) — Dark-Mode (Friseur) |
 
 ### Wichtige Token-Regel
 
