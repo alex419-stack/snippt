@@ -60,6 +60,7 @@ export default function FriseurPage() {
   const anzahlGesamt = termineHeute.length
 
   return (
+    <div className="relative">
     <div className="mx-auto max-w-[430px] space-y-8">
       <FriseurHeader
         friseur={marco}
@@ -85,6 +86,14 @@ export default function FriseurPage() {
         </code>{' '}
         — keine API, keine Logik außer Aggregation.
       </footer>
+    </div>
+
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src="/barber-hero-clean.png"
+      alt="Snippt Barbershop"
+      className="absolute right-2 top-2 w-16 xl:right-8 xl:top-8 xl:w-[260px]"
+    />
     </div>
   )
 }

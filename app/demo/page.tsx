@@ -58,36 +58,40 @@ export default function DemoHubPage() {
   return (
     <div className="space-y-16">
       {/* Header / Wortmarke */}
-      <header className="space-y-6">
+      <header className="relative overflow-hidden">
 
-        {/* Barber-Stripe — Rot / Weiß / Blau */}
-        <div className="flex h-[3px] w-24 overflow-hidden rounded-full">
-          <div className="flex-1 bg-[#C8201E]" />
-          <div className="flex-1 bg-bone/25" />
-          <div className="flex-1 bg-[#1A3A8F]" />
+        {/* Text-Content — auf Desktop Platz rechts für das Bild */}
+        <div className="space-y-6 md:pr-[44%]">
+
+          {/* Barber-Stripe — Rot / Weiß / Blau */}
+          <div className="flex h-[3px] w-24 overflow-hidden rounded-full">
+            <div className="flex-1 bg-[#C8201E]" />
+            <div className="flex-1 bg-bone/25" />
+            <div className="flex-1 bg-[#1A3A8F]" />
+          </div>
+
+          <div className="flex items-center gap-3 label-caps text-gold">
+            <span className="h-px w-8 bg-gold" />
+            Hi-Fi Mockup · M0
+          </div>
+
+          {/* Wordmark */}
+          <h1 className="text-display text-ink">Snippt</h1>
+
+          <p className="text-lg leading-relaxed text-coal/75 md:text-xl">
+            Premium-Buchung für{' '}
+            <span className="font-medium text-ink">{meinSalon.name}</span>.
+            Stammkunden landen verlässlich bei ihrem Friseur — Walk-In und
+            Vorab-Buchung gleichberechtigt.
+          </p>
         </div>
 
-        <div className="flex items-center gap-3 label-caps text-gold">
-          <span className="h-px w-8 bg-gold" />
-          Hi-Fi Mockup · M0
-        </div>
-
-        {/* Wordmark */}
-        <h1 className="text-display text-ink">Snippt</h1>
-
-        {/* Barbershop Hero-Grafik */}
+        {/* Barbershop Hero-Grafik — rechts, transparenter Hintergrund */}
         <img
-          src="/barbershop-hero.png"
+          src="/barber-hero-clean.png"
           alt="Snippt Barbershop"
-          className="w-full max-w-2xl"
+          className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[42%]"
         />
-
-        <p className="max-w-2xl text-lg leading-relaxed text-coal/75 md:text-xl">
-          Premium-Buchung für{' '}
-          <span className="font-medium text-ink">{meinSalon.name}</span>.
-          Stammkunden landen verlässlich bei ihrem Friseur — Walk-In und
-          Vorab-Buchung gleichberechtigt.
-        </p>
       </header>
 
       {/* 4 Demo-Kacheln */}

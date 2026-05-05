@@ -82,6 +82,7 @@ export default function WalkinPage() {
   const freieSlots = Math.max(0, KAPAZITAET_TAG - anzahlGeplant)
 
   return (
+    <div className="relative">
     <div className="mx-auto max-w-[430px] space-y-6">
       <WalkInHeader salonName="Mein Friseur" datumLang={HEUTE_LANG} />
       <StammfriseurKarte friseur={marco} status={marcoStatus} />
@@ -109,6 +110,14 @@ export default function WalkinPage() {
         </code>{' '}
         — keine API, keine Logik außer Aggregation.
       </footer>
+    </div>
+
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src="/barber-hero-clean.png"
+      alt="Snippt Barbershop"
+      className="absolute right-2 top-2 w-16 xl:right-8 xl:top-8 xl:w-[260px]"
+    />
     </div>
   )
 }

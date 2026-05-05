@@ -21,6 +21,7 @@ export default function ProfilPage() {
   const vorname = marco.name.split(' ')[0]
 
   return (
+    <div className="relative">
     <div className="mx-auto max-w-[430px] space-y-6">
       <ProfilHeader friseur={marco} salonName="Mein Friseur" />
 
@@ -65,6 +66,14 @@ export default function ProfilPage() {
         </code>{' '}
         — keine API, keine Logik außer Aggregation.
       </footer>
+    </div>
+
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src="/barber-hero-clean.png"
+      alt="Snippt Barbershop"
+      className="absolute right-2 top-2 w-16 xl:right-8 xl:top-8 xl:w-[260px]"
+    />
     </div>
   )
 }
