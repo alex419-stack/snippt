@@ -33,8 +33,8 @@ export function FriseurHeader({
 
       <header className="flex items-center justify-between border-b border-bone/10 pb-6">
         <div className="space-y-1.5">
-          <div className="flex items-center gap-3 label-caps text-whiskey">
-            <span className="h-px w-6 bg-whiskey" />
+          <div className="flex items-center gap-3 label-caps text-gold">
+            <span className="h-px w-6 bg-gold" />
             Friseur · Tagesansicht
           </div>
           <h1 className="text-h1 text-ink">
@@ -65,7 +65,7 @@ function Chip({ label, gold = false }: { label: string; gold?: boolean }) {
   return (
     <span
       className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
-        gold ? 'bg-whiskey/15 text-whiskey' : 'bg-bone/8 text-coal/70'
+        gold ? 'bg-gold/15 text-gold' : 'bg-bone/8 text-coal/70'
       }`}
     >
       {label}

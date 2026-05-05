@@ -8,7 +8,7 @@
  */
 export function ConversionTeaser({ friseurName }: { friseurName: string }) {
   return (
-    <section className="rounded-2xl border border-whiskey/20 bg-whiskey/5 p-5 space-y-4">
+    <section className="rounded-2xl border border-gold/20 bg-gold/5 p-5 space-y-4">
       <div className="space-y-1.5">
         <p className="text-sm font-semibold text-ink">
           {friseurName} merkt sich deinen Schnitt
@@ -21,7 +21,7 @@ export function ConversionTeaser({ friseurName }: { friseurName: string }) {
 
       <button
         type="button"
-        className="flex w-full items-center justify-center rounded-xl bg-whiskey px-4 py-3 text-sm font-semibold text-ink transition-opacity hover:opacity-85"
+        className="flex w-full items-center justify-center rounded-xl bg-gold px-4 py-3 text-sm font-semibold text-ink transition-opacity hover:opacity-85"
       >
         Konto in 10 Sekunden anlegen
       </button>

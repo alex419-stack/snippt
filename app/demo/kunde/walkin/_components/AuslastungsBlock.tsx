@@ -11,9 +11,9 @@ const STUFEN: Record<
   Auslastungsstufe,
   { label: string; breite: string; farbe: string }
 > = {
-  entspannt: { label: 'Entspannt',  breite: 'w-[35%]', farbe: 'bg-whiskey/40' },
-  maessig:   { label: 'Mäßig',      breite: 'w-[62%]', farbe: 'bg-whiskey/70' },
-  voll:      { label: 'Sehr voll',  breite: 'w-[92%]', farbe: 'bg-whiskey' },
+  entspannt: { label: 'Entspannt',  breite: 'w-[35%]', farbe: 'bg-gold/40' },
+  maessig:   { label: 'Mäßig',      breite: 'w-[62%]', farbe: 'bg-gold/70' },
+  voll:      { label: 'Sehr voll',  breite: 'w-[92%]', farbe: 'bg-gold' },
 }
 
 export function AuslastungsBlock({

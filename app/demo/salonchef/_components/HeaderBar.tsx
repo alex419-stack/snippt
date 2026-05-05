@@ -28,8 +28,8 @@ export function HeaderBar({
 
       <header className="flex flex-col gap-6 border-b border-bone/10 pb-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
-          <div className="flex items-center gap-3 label-caps text-whiskey">
-            <span className="h-px w-6 bg-whiskey" />
+          <div className="flex items-center gap-3 label-caps text-gold">
+            <span className="h-px w-6 bg-gold" />
             Salonchef · Dashboard
           </div>
           <h1 className="text-h1 text-ink">

@@ -19,8 +19,8 @@ export function BuchungsHeader({ friseur }: { friseur: Friseur }) {
       </Link>
 
       <header className="border-b border-bone/10 pb-6">
-        <div className="flex items-center gap-3 label-caps text-whiskey mb-3">
-          <span className="h-px w-6 bg-whiskey" />
+        <div className="flex items-center gap-3 label-caps text-gold mb-3">
+          <span className="h-px w-6 bg-gold" />
           Endkunde · Termin buchen
         </div>
 
@@ -36,7 +36,7 @@ export function BuchungsHeader({ friseur }: { friseur: Friseur }) {
             <p className="text-sm text-coal/65">{friseur.spezialitaet}</p>
             {friseur.social_proof.bewertung_durchschnitt != null && (
               <div className="flex items-center gap-1.5">
-                <Star className="h-3 w-3 fill-whiskey text-whiskey" strokeWidth={0} />
+                <Star className="h-3 w-3 fill-gold text-gold" strokeWidth={0} />
                 <span className="text-xs font-semibold tabular-nums text-ink">
                   {friseur.social_proof.bewertung_durchschnitt}
                 </span>

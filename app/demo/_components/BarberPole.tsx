@@ -1,48 +1,85 @@
 /**
- * BarberPole — Klassische Barbershop-Spirale als CSS-Streifen.
+ * BarberPole — Klassische Barbershop-Spirale, Rot/Weiß/Blau animiert.
  *
- * Rot / Weiß / Blau — nur als dekoratives Element, nie als Textfarbe.
- * Wird im Demo-Hub neben dem App-Namen platziert.
- * Server Component.
+ * CSS-Animation via .barberpole-spin (definiert in globals.css).
+ * Server Component — kein 'use client' nötig, da nur CSS-Animation.
  */
 export function BarberPole({
-  height = 48,
-  width = 10,
+  height = 64,
+  width = 14,
 }: {
   height?: number
   width?: number
 }) {
-  // Streifen: Rot · Weiß · Blau · Rot · Weiß · Blau (6 Segmente)
-  const streifen = ['#C0392B', '#F5F3EF', '#2E4A6B', '#C0392B', '#F5F3EF', '#2E4A6B']
-  const segmentHoehe = Math.round(height / streifen.length)
+  const capSize = Math.max(8, Math.round(width * 0.7))
 
   return (
     <div
-      className="flex-shrink-0 overflow-hidden rounded-full border border-bone/15"
+      className="flex-shrink-0 flex flex-col"
       style={{ width, height }}
       aria-hidden="true"
     >
-      {streifen.map((farbe, i) => (
+      {/* Obere Kappe */}
+      <div
+        className="flex-shrink-0 rounded-t-full"
+        style={{
+          height: capSize,
+          background: 'linear-gradient(to bottom, #2A2A2A, #1A1A1A)',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.5)',
+          border: '1px solid rgba(255,255,255,0.12)',
+          borderBottom: 'none',
+        }}
+      />
+
+      {/* Spiralzylinder */}
+      <div
+        className="flex-1 relative overflow-hidden"
+        style={{
+          borderLeft: '1px solid rgba(0,0,0,0.3)',
+          borderRight: '1px solid rgba(0,0,0,0.3)',
+        }}
+      >
         <div
-          key={i}
+          className="absolute inset-0 barberpole-spin"
           style={{
-            height: segmentHoehe,
-            backgroundColor: farbe,
-            opacity: farbe === '#F5F3EF' ? 0.9 : 0.85,
+            background: `repeating-linear-gradient(
+              -45deg,
+              #C8201E 0px,   #C8201E 8px,
+              #F8F6F3 8px,   #F8F6F3 16px,
+              #1A3A8F 16px,  #1A3A8F 24px
+            )`,
           }}
         />
-      ))}
+        {/* Glanz-Overlay für Zylinder-Optik */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to right, rgba(255,255,255,0.18) 0%, transparent 40%, rgba(0,0,0,0.12) 100%)',
+          }}
+        />
+      </div>
+
+      {/* Untere Kappe */}
+      <div
+        className="flex-shrink-0 rounded-b-full"
+        style={{
+          height: capSize,
+          background: 'linear-gradient(to bottom, #1A1A1A, #111111)',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.6)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderTop: 'none',
+        }}
+      />
     </div>
   )
 }
 
 /**
- * BarberPolePair — Zwei Barber Poles als Rahmenpaar.
- * Wraps children mit einem Pole links und rechts.
+ * BarberPolePair — Zwei Barber Poles flankieren den übergebenen Inhalt.
  */
 export function BarberPolePair({
   children,
-  height = 48,
+  height = 64,
 }: {
   children: React.ReactNode
   height?: number

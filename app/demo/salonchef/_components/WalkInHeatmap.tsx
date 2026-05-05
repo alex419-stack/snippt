@@ -21,12 +21,12 @@ export type WalkInRaster = {
 // 5 nicht-lineare Gold-Opacity-Stufen für die Heatmap-Zellen.
 // Diskrete Schwellen vermeiden, dass niedrige Werte (0.05–0.2) optisch ununterscheidbar werden.
 function goldOpacity(wert: number, max: number): string {
-  if (wert === 0 || max === 0) return 'rgba(139,94,60, 0.05)'
+  if (wert === 0 || max === 0) return 'rgba(201,168,76, 0.05)'
   const anteil = wert / max
-  if (anteil <= 0.25) return 'rgba(139,94,60, 0.18)'
-  if (anteil <= 0.50) return 'rgba(139,94,60, 0.38)'
-  if (anteil <= 0.75) return 'rgba(139,94,60, 0.62)'
-  return 'rgba(139,94,60, 0.85)'
+  if (anteil <= 0.25) return 'rgba(201,168,76, 0.18)'
+  if (anteil <= 0.50) return 'rgba(201,168,76, 0.38)'
+  if (anteil <= 0.75) return 'rgba(201,168,76, 0.62)'
+  return 'rgba(201,168,76, 0.85)'
 }
 
 export function WalkInHeatmap({ raster }: { raster: WalkInRaster }) {

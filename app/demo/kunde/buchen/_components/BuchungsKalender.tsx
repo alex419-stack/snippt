@@ -112,14 +112,14 @@ function KalenderGrid({
                     key={tag.datum}
                     className={`border-b border-bone/8 py-2 text-[10px] font-semibold ${
                       istHeute
-                        ? 'text-whiskey'
+                        ? 'text-gold'
                         : istVergangenheit
                           ? 'text-coal/25'
                           : 'text-coal/55'
                     }`}
                   >
                     <div>{tag.label}</div>
-                    <div className={`text-[9px] ${istHeute ? 'text-whiskey/70' : 'text-coal/30'}`}>
+                    <div className={`text-[9px] ${istHeute ? 'text-gold/70' : 'text-coal/30'}`}>
                       {tag.tagNummer}
                     </div>
                   </th>
@@ -155,7 +155,7 @@ function KalenderGrid({
                       ) : (
                         <button
                           type="button"
-                          className="h-5 w-full rounded bg-whiskey/10 text-[9px] font-medium text-whiskey/70 transition-colors hover:bg-whiskey/25 hover:text-whiskey"
+                          className="h-5 w-full rounded bg-gold/10 text-[9px] font-medium text-gold/70 transition-colors hover:bg-gold/25 hover:text-gold"
                         >
                           frei
                         </button>
@@ -172,7 +172,7 @@ function KalenderGrid({
       {/* Legende */}
       <div className="flex items-center gap-4 border-t border-bone/8 px-4 py-2.5">
         <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded bg-whiskey/20" />
+          <span className="h-2 w-2 rounded bg-gold/20" />
           <span className="text-[10px] text-coal/40">Frei</span>
         </div>
         <div className="flex items-center gap-1.5">

@@ -11,7 +11,7 @@ import type { ComponentType } from 'react'
  * AktivitaetsFeed — letzte Demo-Events als kompakte Liste.
  *
  * Dark-Mode: bg-surface statt bg-white, hover:bg-bone/5 statt hover:bg-bone/60.
- * text-whiskey statt text-emerald-700 (auf dunklem BG lesbar + Design-System-konsistent).
+ * text-gold statt text-emerald-700 (auf dunklem BG lesbar + Design-System-konsistent).
  * Server Component.
  */
 
@@ -79,10 +79,10 @@ const ICONS: Record<EventTyp, ComponentType<{ className?: string }>> = {
 
 const ICON_FARBEN: Record<EventTyp, string> = {
   termin:      'text-coal/70',
-  walkin:      'text-whiskey',
-  stammkunde:  'text-whiskey/70',  // gold/70 statt emerald-700 — auf Dark lesbar
+  walkin:      'text-gold',
+  stammkunde:  'text-gold/70',  // gold/70 statt emerald-700 — auf Dark lesbar
   meilenstein: 'text-ink',
-  feedback:    'text-whiskey',
+  feedback:    'text-gold',
 }
 
 export function AktivitaetsFeed() {

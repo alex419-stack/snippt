@@ -8,7 +8,7 @@ import type { Friseur } from '@/lib/mockData'
  *   - bg-surface statt bg-white
  *   - Bar-Track: bg-bone/8 (helles Geist-Weiß bei 8% auf dunkler Surface)
  *   - Bar-Füllung: bg-ink (= Off-White im Dark Mode)
- *   - Trend "wachsend": text-whiskey statt text-emerald-700 (Anti-Toxizität + Dark-Lesbarkeit)
+ *   - Trend "wachsend": text-gold statt text-emerald-700 (Anti-Toxizität + Dark-Lesbarkeit)
  *   - hover:bg-bone/5 (subtiler Hover-Tint auf dunkler Surface)
  *
  * Anti-Toxizitäts-Rahmung: kein Ranking, kein Rot.
@@ -128,7 +128,7 @@ function FriseurZeile({
           </div>
           {istWalkInSpitzenreiter && (
             <span
-              className="inline-flex items-center gap-1 rounded-full border border-whiskey/40 bg-whiskey/12 px-2 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.12em] text-whiskey"
+              className="inline-flex items-center gap-1 rounded-full border border-gold/40 bg-gold/12 px-2 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.12em] text-gold"
               title="Stärkste Walk-In-Anziehung im Team"
             >
               <Sparkles className="h-3 w-3" strokeWidth={2.25} />
@@ -181,7 +181,7 @@ function TrendIndikator({
       Icon: TrendingUp,
       label: 'Wachsend',
       // gold statt emerald-700 — auf dunklem BG lesbar + im Design-System
-      farbe: 'text-whiskey',
+      farbe: 'text-gold',
     },
     stabil: {
       Icon: Minus,

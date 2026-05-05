@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { meinSalon } from '@/lib/mockData'
+import { BarberPolePair } from './_components/BarberPole'
 
 /**
  * /demo Hub
@@ -52,18 +53,13 @@ export default function DemoHubPage() {
     <div className="space-y-16">
       {/* Header / Wortmarke */}
       <header className="space-y-6">
-        <div className="flex items-center gap-3 label-caps text-whiskey">
-          <span className="h-px w-8 bg-whiskey" />
+        <div className="flex items-center gap-3 label-caps text-gold">
+          <span className="h-px w-8 bg-gold" />
           Hi-Fi Mockup · M0
         </div>
-        <div className="flex items-center gap-5">
-          {/* Barbershop-Akzent: Rot · (Cream-Lücke = Weiß) · Blau */}
-          <div className="flex h-14 flex-shrink-0 items-stretch gap-[7px]">
-            <div className="w-[4px] rounded-full bg-[#C0392B]" />
-            <div className="w-[4px] rounded-full bg-[#2E4A6B]" />
-          </div>
+        <BarberPolePair height={72}>
           <h1 className="text-display text-ink">Snippt</h1>
-        </div>
+        </BarberPolePair>
         <p className="max-w-2xl text-lg leading-relaxed text-coal/75 md:text-xl">
           Premium-Buchung für{' '}
           <span className="font-medium text-ink">{meinSalon.name}</span>.
@@ -81,7 +77,7 @@ export default function DemoHubPage() {
             className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-bone/10 bg-surface p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-bone/20 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.5)]"
           >
             <div className="space-y-4">
-              <div className="label-caps text-whiskey">
+              <div className="label-caps text-gold">
                 {t.akteur}
               </div>
               <h2 className="text-h2 text-ink">
@@ -95,7 +91,7 @@ export default function DemoHubPage() {
               <span className="text-xs font-medium uppercase tracking-[0.16em] text-coal/50">
                 Ansehen
               </span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-bone transition-transform duration-200 group-hover:rotate-45">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-background transition-transform duration-200 group-hover:rotate-45">
                 <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
               </span>
             </div>

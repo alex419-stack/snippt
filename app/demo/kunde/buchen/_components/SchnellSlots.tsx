@@ -15,8 +15,8 @@ type Slot = {
 export function SchnellSlots({ slots, friseurVorname }: { slots: Slot[]; friseurVorname: string }) {
   return (
     <section className="space-y-3">
-      <div className="flex items-center gap-3 label-caps text-whiskey">
-        <span className="h-px w-6 bg-whiskey" />
+      <div className="flex items-center gap-3 label-caps text-gold">
+        <span className="h-px w-6 bg-gold" />
         Schnell buchen
       </div>
 
@@ -35,7 +35,7 @@ export function SchnellSlots({ slots, friseurVorname }: { slots: Slot[]; friseur
               <button
                 key={`${slot.datum}-${slot.uhrzeit}`}
                 type="button"
-                className="rounded-xl border border-bone/15 bg-surface px-3.5 py-2.5 text-left transition-colors hover:border-whiskey/40 hover:bg-whiskey/5"
+                className="rounded-xl border border-bone/15 bg-surface px-3.5 py-2.5 text-left transition-colors hover:border-gold/40 hover:bg-gold/5"
               >
                 <div className="text-sm font-semibold text-ink">{slot.uhrzeit}</div>
                 <div className="text-[11px] text-coal/50">{slot.datum}</div>

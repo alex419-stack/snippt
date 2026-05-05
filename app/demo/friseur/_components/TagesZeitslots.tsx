@@ -53,8 +53,8 @@ export function TagesZeitslots({
 
   return (
     <section className="space-y-3">
-      <div className="flex items-center gap-3 label-caps text-whiskey">
-        <span className="h-px w-6 bg-whiskey" />
+      <div className="flex items-center gap-3 label-caps text-gold">
+        <span className="h-px w-6 bg-gold" />
         Heute
       </div>
 
@@ -96,11 +96,11 @@ function StundenMarker({ uhrzeit }: { uhrzeit: string }) {
 function JetztLinie({ uhrzeit }: { uhrzeit: string }) {
   return (
     <div className="flex items-center gap-3 py-2">
-      <span className="w-10 flex-shrink-0 text-right text-[11px] tabular-nums text-whiskey">
+      <span className="w-10 flex-shrink-0 text-right text-[11px] tabular-nums text-gold">
         {uhrzeit}
       </span>
-      <div className="h-px flex-1 bg-whiskey/40" />
-      <span className="flex-shrink-0 rounded-full border border-whiskey/30 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-whiskey/80">
+      <div className="h-px flex-1 bg-gold/40" />
+      <span className="flex-shrink-0 rounded-full border border-gold/30 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-gold/80">
         Jetzt
       </span>
     </div>
@@ -113,7 +113,7 @@ function TerminBlock({ eintrag }: { eintrag: TerminEintrag }) {
   const gedimmt = termin.status === 'abgeschlossen' || termin.status === 'walkin'
 
   const karteKlasse = istNaechster
-    ? 'border-whiskey/40 bg-whiskey/8 shadow-[0_0_0_1px_rgba(139,94,60,0.12)]'
+    ? 'border-gold/40 bg-gold/8 shadow-[0_0_0_1px_rgba(201,168,76,0.12)]'
     : gedimmt
       ? 'border-bone/8 bg-surface/40'
       : 'border-bone/10 bg-surface'
@@ -170,14 +170,14 @@ function StatusBadge({
 }) {
   if (istNaechster) {
     return (
-      <span className="flex-shrink-0 rounded-full bg-whiskey/20 px-2 py-0.5 text-[10px] font-semibold text-whiskey">
+      <span className="flex-shrink-0 rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-semibold text-gold">
         Als nächstes
       </span>
     )
   }
   if (status === 'walkin') {
     return (
-      <span className="flex-shrink-0 rounded-full bg-whiskey/10 px-2 py-0.5 text-[10px] font-semibold text-whiskey/80">
+      <span className="flex-shrink-0 rounded-full bg-gold/10 px-2 py-0.5 text-[10px] font-semibold text-gold/80">
         Walk-In
       </span>
     )

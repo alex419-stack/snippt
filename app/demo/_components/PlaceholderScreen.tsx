@@ -25,7 +25,7 @@ export function PlaceholderScreen({
       </Link>
 
       <header className="space-y-4">
-        <div className="label-caps text-whiskey">
+        <div className="label-caps text-gold">
           {akteur}
         </div>
         <h1 className="text-h1 text-ink md:text-5xl">

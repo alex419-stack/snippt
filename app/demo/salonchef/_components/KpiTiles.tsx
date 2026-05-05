@@ -52,7 +52,7 @@ function TrendBadge({ trend }: { trend: Trend }) {
 
   // Anti-Toxizität: positiv = gold, negativ = dezentes coal, niemals Rot
   const farbe = positiv
-    ? 'text-whiskey'
+    ? 'text-gold'
     : negativ
       ? 'text-coal/55'
       : 'text-coal/45'

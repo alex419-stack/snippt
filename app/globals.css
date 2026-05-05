@@ -3,17 +3,18 @@
 @tailwind utilities;
 
 @layer base {
-  /* ── Light-Mode Defaults ─────────────────────────────────────────────────
+  /*
+   * Dual-Mode System: .theme-light und .theme-dark auf Layout-Ebene.
+   * Endkunde-Routen (kunde/*): theme-light
+   * Profi-Routen (friseur/*, salonchef/*): theme-dark
    *
    * Zwei parallele Token-Systeme:
-   *   shadcn-Tokens (--background, --card, etc.) im HSL-Format
-   *   Snippt-Tokens (--tw-ink, --tw-bone, etc.) im RGB space-separated Format
-   *
-   * shadcn-Komponenten lesen die HSL-Vars, eigene Komponenten die RGB-Vars.
-   * Beide werden in .snippt-premium für Dark Mode überschrieben.
+   *   shadcn-Tokens (--background, --card etc.) im HSL-Format
+   *   Snippt-Tokens (--tw-ink, --tw-bone etc.) im RGB space-separated Format
+   *   (space-separated RGB aktiviert Tailwind opacity-Syntax: text-coal/65)
    */
   :root {
-    /* shadcn (HSL) */
+    /* shadcn (HSL) — Light defaults */
     --background: 36 20% 94%;   /* #F5F3EF Warm Cream */
     --foreground: 0 0% 6%;      /* #0F0F0F Tiefschwarz */
     --card: 36 33% 97%;         /* #FAF9F7 Helles Cream für Cards */
@@ -30,40 +31,71 @@
     --accent-foreground: 0 0% 6%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 36 20% 94%;
-    --border: 36 12% 85%;       /* #DDD9D3 Warme Trennlinie */
+    --border: 36 12% 85%;
     --input: 36 12% 85%;
-    --ring: 25 37% 38%;         /* Whiskey Brown */
+    --ring: 43 50% 54%;         /* Warmgold */
     --radius: 0.75rem;
 
-    /* Snippt-Palette (RGB space-separated, für Tailwind opacity-Syntax) */
-    --tw-ink:     15 15 15;      /* #0F0F0F Tiefschwarz */
-    --tw-bone:    15 15 15;      /* Borders/Overlays auf hellem Grund → dunkel */
-    --tw-coal:    60 55 50;      /* #3C3732 Warm-Dunkelbraun als Sekundärtext */
-    --tw-surface: 250 249 247;   /* #FAF9F7 Helles Cream für Cards */
+    /* Snippt-Palette — Light */
+    --tw-ink:     15 15 15;      /* #0F0F0F Tiefschwarz — Primärtext */
+    --tw-bone:    15 14 11;      /* Near-Black — border-bone/15 = zarte dunkle Linie auf Cream */
+    --tw-coal:    60 55 50;      /* #3C3732 Warm-Dunkelbraun — Sekundärtext */
+    --tw-surface: 250 249 247;   /* #FAF9F7 Helles Cream — Cards */
   }
 
-  /* ── Snippt Premium — Dark Barbershop Theme ──────────────────────────────
-   *
-   * Wird auf <body> gelegt (app/layout.tsx) → global dark.
-   *
-   * Palette:
-   *   #0F0E0B Warm-Black   → Background (bone)
-   *   #1C1B18 Dark Surface → Cards/Panels (surface)
-   *   #F5F3EF Off-White    → Primärtext (ink)
-   *   #9C9A96 Warm-Gray    → Sekundärtext (coal)
-   *   #C9A84C Warmgold     → Akzent (gold, unverändert)
+  /* ── theme-light ─────────────────────────────────────────────────────────
+   * Explizite Light-Klasse für Endkunden-Routen (kunde/*).
+   * Setzt bg/color explizit damit das Theme auch ohne Tailwind-Klassen greift.
    */
-  .snippt-premium {
-    /* shadcn (HSL) — Dark */
+  .theme-light {
+    --background: 36 20% 94%;
+    --foreground: 0 0% 6%;
+    --card: 36 33% 97%;
+    --card-foreground: 0 0% 6%;
+    --popover: 36 33% 97%;
+    --popover-foreground: 0 0% 6%;
+    --primary: 0 0% 6%;
+    --primary-foreground: 36 20% 94%;
+    --secondary: 36 15% 90%;
+    --secondary-foreground: 0 0% 6%;
+    --muted: 36 15% 90%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 36 15% 90%;
+    --accent-foreground: 0 0% 6%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 36 20% 94%;
+    --border: 36 12% 85%;
+    --input: 36 12% 85%;
+    --ring: 43 50% 54%;
+
+    --tw-ink:     15 15 15;
+    --tw-bone:    15 14 11;
+    --tw-coal:    60 55 50;
+    --tw-surface: 250 249 247;
+
+    background-color: hsl(36, 20%, 94%);
+    color: hsl(0, 0%, 6%);
+  }
+
+  /* ── theme-dark ──────────────────────────────────────────────────────────
+   * Dark Barbershop Theme für Profi-Routen (Friseur, Salonchef).
+   *
+   * #0F0E0B Warm-Black   → Seitenhintergrund (via bg-background)
+   * #1C1B18 Dark Surface → Cards/Panels
+   * #F5F3EF Off-White    → Primärtext
+   * #9C9A96 Warm-Gray    → Sekundärtext
+   * #C9A84C Warmgold     → Akzent
+   */
+  .theme-dark {
     --background:             30 5% 6%;      /* #0F0E0B */
     --foreground:             40 20% 96%;    /* #F5F3EF */
     --card:                   30 5% 11%;     /* #1C1B18 */
     --card-foreground:        40 20% 96%;
     --popover:                30 5% 11%;
     --popover-foreground:     40 20% 96%;
-    --primary:                40 20% 96%;    /* Off-White als Primary-Aktion */
+    --primary:                40 20% 96%;
     --primary-foreground:     30 5% 6%;
-    --secondary:              30 5% 16%;     /* Etwas heller als Card */
+    --secondary:              30 5% 16%;
     --secondary-foreground:   40 20% 96%;
     --muted:                  30 5% 16%;
     --muted-foreground:       30 3% 60%;     /* #9C9A96 */
@@ -71,19 +103,17 @@
     --accent-foreground:      30 5% 6%;
     --destructive:            0 70% 45%;
     --destructive-foreground: 40 20% 96%;
-    --border:                 40 10% 15%;    /* Subtile warme Border */
+    --border:                 40 10% 15%;
     --input:                  40 10% 15%;
-    --ring:                   43 50% 54%;    /* Gold-Ring bei Focus */
-    --radius:                 0.75rem;
+    --ring:                   43 50% 54%;
 
-    /* Snippt-Palette (RGB) — Dark-Varianten */
-    --tw-ink:     245 243 239;   /* #F5F3EF Off-White (Primärtext) */
-    --tw-bone:    15 14 11;      /* #0F0E0B Warm-Black (Background) */
-    --tw-coal:    156 154 150;   /* #9C9A96 Warm-Midgray (Sekundär) */
-    --tw-surface: 28 27 24;      /* #1C1B18 Dark Surface (Cards) */
+    --tw-ink:     245 243 239;   /* #F5F3EF Off-White — Primärtext */
+    --tw-bone:    245 243 239;   /* Near-White — border-bone/15 = zarte helle Linie auf Dark */
+    --tw-coal:    156 154 150;   /* #9C9A96 Warm-Midgray — Sekundärtext */
+    --tw-surface: 28 27 24;      /* #1C1B18 Dark Surface — Cards */
 
-    background-color: #0F0E0B;
-    color: #F5F3EF;
+    background-color: hsl(30, 5%, 6%);
+    color: hsl(40, 20%, 96%);
   }
 
   * {
@@ -95,13 +125,20 @@
   }
 }
 
+/* ── Barber-Pole-Animation ───────────────────────────────────────────────── */
+@keyframes barberpole {
+  from { background-position: 0 0; }
+  to   { background-position: 0 34px; }
+}
+
+.barberpole-spin {
+  animation: barberpole 1.6s linear infinite;
+}
+
 /* ── Typografie-Helfer ───────────────────────────────────────────────────
  *
- * Playfair Display (font-serif): Brand-Wörter, Display-Headlines, H1, H2,
- *   Eigennamen in Brand-Karten.
- *
- * Geist Sans (font-sans): Labels, KPI-Werte, Buttons, Inputs, Badges,
- *   Zeit-Angaben, Notizen, Fließtext — alles operative UI.
+ * Playfair Display (font-serif): Brand-Wörter, Display-Headlines, H1, H2.
+ * Inter (font-sans): Labels, KPI-Werte, Buttons, Inputs, Badges, Fließtext.
  */
 @layer components {
   .text-display {

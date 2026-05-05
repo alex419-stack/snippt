@@ -24,8 +24,8 @@ export function StammfriseurKarte({
 }) {
   return (
     <section className="space-y-3">
-      <div className="flex items-center gap-3 label-caps text-whiskey">
-        <MapPin className="h-3 w-3 fill-whiskey text-whiskey" strokeWidth={0} />
+      <div className="flex items-center gap-3 label-caps text-gold">
+        <MapPin className="h-3 w-3 fill-gold text-gold" strokeWidth={0} />
         Dein Friseur
       </div>
 
@@ -44,7 +44,7 @@ export function StammfriseurKarte({
             {friseur.social_proof.bewertung_durchschnitt != null && (
               <div className="flex items-center gap-1.5 pt-0.5">
                 <Star
-                  className="h-3.5 w-3.5 flex-shrink-0 fill-whiskey text-whiskey"
+                  className="h-3.5 w-3.5 flex-shrink-0 fill-gold text-gold"
                   strokeWidth={0}
                 />
                 <span className="text-sm font-semibold tabular-nums text-ink">
@@ -74,7 +74,7 @@ export function StammfriseurKarte({
         <div className="flex flex-col gap-2.5">
           <Link
             href="/demo/kunde/buchen"
-            className="flex w-full items-center justify-center rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-bone transition-opacity hover:opacity-80"
+            className="flex w-full items-center justify-center rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80"
           >
             {status.typ === 'frei'
               ? 'Slot sichern'
@@ -95,8 +95,8 @@ export function StammfriseurKarte({
 function StatusPill({ status }: { status: FriseurStatus }) {
   if (status.typ === 'frei') {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-whiskey/15 px-3 py-1 text-xs font-medium text-whiskey">
-        <span className="h-1.5 w-1.5 rounded-full bg-whiskey" />
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1 text-xs font-medium text-gold">
+        <span className="h-1.5 w-1.5 rounded-full bg-gold" />
         Gerade frei
       </span>
     )

@@ -51,12 +51,14 @@ Kern-USP: Stammkunden landen verlässlich bei IHREM Friseur, nicht beim ersten v
 
 ---
 
-## Aktueller Status (02.05.2026)
+## Aktueller Status (04.05.2026)
 
 - M0 Phase 0 (Code-Mockup-Fundament) ✅ committet (`6cefc17`)
 - Chairly→Snippt Rebrand ✅ committet (`1cd6980`)
 - Phase 0 Nachzug Personalbranding ✅ committet (`cb00ff7`)
-- **Pivot 30.04.2026:** Mockup wird als Next.js-Code im Repo gebaut (Branch `m0-mockup`), nicht in Figma — Alex kann den Stack bereits, Lernkurve in Code geringer
+- M0 Phase 1 (Demo-Screens) ✅ committet (`e3bb10d`)
+- **Design-System-Überarbeitung 04.05.2026** ✅ (unvermittelter Branch-Stand, noch kein Commit)
+- **Pivot 30.04.2026:** Mockup wird als Next.js-Code im Repo gebaut (Branch `m0-mockup`), nicht in Figma
 - **Pivot 02.05.2026 (drei strukturelle Entscheidungen):**
   - Build-Tool: Pro €18 → **Max 5x €92/Mo** (Pro-Limit real getroffen)
   - Pricing: Korridor €15-45 → **€7/Friseur/Mo Pilot-Preis** als Fixzahl
@@ -110,23 +112,65 @@ salon (auth.users: salon_admin)
 | 9 | Personalbranding | Friseur-als-Marke + natürlicher (positiv-gerahmter) Wettbewerb | Strategie-Pivot 02.05.2026 — Salonchef sieht Wettbewerbs-Matrix, Friseur sieht „Mein Brand"-Karte |
 | 10 | Build-Tool | **Claude Max 5x ($100/€92 Mo)** — Pivot 02.05.2026 (Pro-Limit am 02.05. real getroffen) | Sub-Agent-Headroom verfügbar, Reviewer-als-Dritter aber sparsam; Eskalation auf Max 20x nur in kritischen Wochen |
 | 13 | Zielgruppe | **Long-Tail-Barbershops mit 15-22€-Schnitten** (Pivot 02.05.2026) | Konkurrenz dort nicht registriert — unbeackerter Markt; Pilot-Salon „Mein Friseur" passt |
-| 11 | Logo | Wortmarken-Style Geist Font in M2 | Pro-Logo erst nach Pilot-Erfolg |
+| 11 | Logo | Wortmarken-Style Inter Font in M2 | Pro-Logo erst nach Pilot-Erfolg |
 | 12 | Recht | IT-Recht-Generator (e-recht24.de) für AGB/DSE/Impressum | MVP-tauglich, anwaltlicher Review nach Pilot |
 
 **Bewusst nicht im MVP:** Online-Zahlung, Bewertungen, In-App-Chat, WhatsApp-Erinnerung, Loyalty/Rabattcodes, Mehrsprachigkeit, Salon-Wechsel-Logik.
 
 ---
 
-## Premium-Design-System (Dark Barbershop)
+## Premium-Design-System (Dual Mode, Stand 04.05.2026)
 
-| Rolle | Hex |
-|-------|-----|
-| Hintergrund | `#F8F7F4` (Off-White) |
-| Primär | `#0F0F0F` (Tiefschwarz) |
-| Akzent | `#C9A84C` (Warmgold) |
-| Text | `#1C1C1E` (Dunkelgrau) |
+**Architektur:** Zwei CSS-Klassen (`.theme-light`, `.theme-dark`) auf Layout-Ebene — keine globale Body-Klasse.
 
-**Typografie:** Geist Font (bereits via `next/font/google` eingebunden).
+| Route | Theme |
+|-------|-------|
+| `/demo/kunde/*` | Light (Warm Cream) |
+| `/demo/friseur/*` | Dark (Warm Black) |
+| `/demo/salonchef/*` | Dark (Warm Black) |
+| `/demo` Hub | Dark |
+| `/`, `/login`, `/register` | Light (`:root` Default) |
+
+### Light Mode (Endkunde)
+
+| Token | Hex | Verwendung |
+|-------|-----|-----------|
+| Background | `#F5F3EF` | Seitenhintergrund (Warm Cream) |
+| Surface / Card | `#FAF9F7` | Cards — einen Ton heller als Hintergrund |
+| `ink` | `#0F0F0F` | Primärtext |
+| `coal` | `#3C3732` | Sekundärtext (Warmes Dunkelbraun) |
+| `bone` | near-black `15 14 11` | Nur für Borders: `border-bone/15` = zarte dunkle Linie |
+| `gold` | `#C9A84C` | Akzent (Warmgold) |
+
+### Dark Mode (Friseur, Salonchef)
+
+| Token | Hex | Verwendung |
+|-------|-----|-----------|
+| Background | `#0F0E0B` | Seitenhintergrund (Warm Black) |
+| Surface / Card | `#1C1B18` | Cards |
+| `ink` | `#F5F3EF` | Primärtext (Off-White) |
+| `coal` | `#9C9A96` | Sekundärtext (Warm Midgray) |
+| `bone` | near-white `245 243 239` | Nur für Borders: `border-bone/15` = zarte helle Linie |
+| `gold` | `#C9A84C` | Akzent (identisch in beiden Themes) |
+
+### Wichtige Token-Regel
+
+`text-bone` NICHT als Textfarbe auf `bg-ink`-Buttons verwenden — `bone` ist semantisch für Borders reserviert und erzeugt in beiden Themes unsichtbaren Text. Stattdessen: **`text-background`** (kontrastiert korrekt in Light + Dark).
+
+### Typografie
+
+| Font | Variable | Verwendung |
+|------|----------|-----------|
+| **Inter** (400/500/600/700) | `--font-inter` | Labels, Buttons, Inputs, Body — alle operative UI |
+| **Playfair Display** (600/700) | `--font-serif` | Headlines, Display, Eigennamen, Brand-Wörter |
+
+### BarberPole-Komponente
+
+Animierte CSS-Spirale in `app/demo/_components/BarberPole.tsx`. Farben: Rot `#C8201E` / Weiß `#F8F6F3` / Blau `#1A3A8F`. Animation via `.barberpole-spin` (definiert in `globals.css`). Varianten: `BarberPole` (einzeln) und `BarberPolePair` (flankiert Content links + rechts).
+
+### Tailwind-Token-Namen
+
+`ink` · `coal` · `bone` · `surface` · `gold` — alle CSS-variablen-basiert, opacity-fähig (z.B. `text-coal/65`, `border-bone/15`).
 
 **Anspruch:** Premium ist MVP-Requirement, nicht Kür. Bei Zeitdruck werden Features verschoben — niemals Design-Qualität reduziert.
 
@@ -169,6 +213,30 @@ salon (auth.users: salon_admin)
 
 ---
 
+## Pre-Pilot-Tasks (neu, aus Business-Interview 03.05.2026)
+
+Müssen vor M7 (Pilot-Onboarding, 29.07.2026) erledigt sein.
+
+### Betrieb-Absicherung
+
+**1. Uptime-Monitoring einrichten**
+- Tool: Uptime Robot (kostenlos, https://uptimerobot.com)
+- Checkt App alle 5 Minuten, SMS-Alert bei Ausfall
+- Aufwand: ~30 Min
+
+**2. Vercel Rollback verifizieren**
+- Testweise Deployment + One-Click-Rollback durchführen
+- Sicherstellen dass Rollback in unter 2 Min funktioniert
+- Aufwand: ~30 Min
+
+**3. Notfall-Protokoll für Salonchef (1 Seite, Deutsch)**
+- Inhalt: kurz auf Papier arbeiten → Alex anrufen (Nummer einfügen) → ich bin in 30 Min erreichbar → Fix kommt selben Tag
+- Sprache: einfaches Deutsch, keine Tech-Sprache
+- Wird beim Pilot-Onboarding (M7) ausgehändigt
+- Aufwand: ~1 Std
+
+---
+
 ## Pre-M0 Tasks (offen)
 
 - [x] Markenrechts-Check `snippt`: DPMA Register + TMview EU (erledigt 30.04.2026)
@@ -196,7 +264,7 @@ Details: `KNOWN_ISSUES.md` im Projektverzeichnis.
 
 - **Sprache:** Outputs und Code-Kommentare auf Deutsch
 - **Datenmodell-Änderungen:** Immer als SQL-Migration in `supabase/migrations/` — nicht direkt im Supabase Dashboard
-- **UI-Änderungen:** Premium-Design-Palette einhalten, Geist Font, keine Behörden-Optik
+- **UI-Änderungen:** Premium-Design-Palette einhalten (Dual Mode), Inter + Playfair, keine Behörden-Optik
 - **Bei größeren Features:** Phase 1 (Strategischer Überblick) → Phase 2 (Aktionsplan) → erst dann Code (siehe globale CLAUDE.md)
 - **Subagenten gezielt nutzen** (Max-5x-Headroom, aber kein Freibrief):
   - `vision-manager-lead` bei strategischen Pivots oder Sparring

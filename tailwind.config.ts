@@ -52,10 +52,10 @@ const config: Config = {
         bone:    "rgb(var(--tw-bone) / <alpha-value>)",
         coal:    "rgb(var(--tw-coal) / <alpha-value>)",
         surface: "rgb(var(--tw-surface) / <alpha-value>)",
-        whiskey: "#8B5E3C",  // Whiskey Brown — Barbershop-Akzent, ersetzt Gold
+        gold: "#C9A84C",     // Warmgold — Barbershop-Akzent
       },
       fontFamily: {
-        // Playfair Display für Headlines/Brand-Wörter, mit San-Serif-Fallback
+        sans:  ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],
         serif: ["var(--font-serif)", "Georgia", "Times New Roman", "serif"],
       },
       borderRadius: {

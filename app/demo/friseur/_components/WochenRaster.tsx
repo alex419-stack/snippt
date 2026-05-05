@@ -66,7 +66,7 @@ export function WochenRaster({
                   <th
                     key={tag.datum}
                     className={`border-b border-bone/8 py-2.5 text-[11px] font-semibold ${
-                      istHeute ? 'text-whiskey' : 'text-coal/50'
+                      istHeute ? 'text-gold' : 'text-coal/50'
                     }`}
                   >
                     {tag.kuerzel}
@@ -94,7 +94,7 @@ export function WochenRaster({
                     <td
                       key={tag.datum}
                       className={`py-1 ${
-                        istHeute ? 'bg-whiskey/5' : ''
+                        istHeute ? 'bg-gold/5' : ''
                       }`}
                     >
                       <div className="flex flex-wrap items-center justify-center gap-0.5">
@@ -125,10 +125,10 @@ function TerminDot({
 }) {
   const farbe =
     status === 'walkin'
-      ? 'bg-whiskey'
+      ? 'bg-gold'
       : status === 'abgeschlossen'
         ? 'bg-coal/30'
-        : 'bg-whiskey/70'
+        : 'bg-gold/70'
 
   return <span className={`inline-block h-1.5 w-1.5 rounded-full ${farbe}`} />
 }

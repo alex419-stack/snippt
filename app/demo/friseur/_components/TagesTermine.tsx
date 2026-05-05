@@ -28,8 +28,8 @@ export function TagesTermine({
 
   return (
     <section className="space-y-3">
-      <div className="flex items-center gap-3 label-caps text-whiskey">
-        <span className="h-px w-6 bg-whiskey" />
+      <div className="flex items-center gap-3 label-caps text-gold">
+        <span className="h-px w-6 bg-gold" />
         Heute
       </div>
 
@@ -69,7 +69,7 @@ function TerminZeile({
     <article
       className={`rounded-2xl border p-4 transition-all ${
         istNaechster
-          ? 'border-whiskey/40 bg-whiskey/8 shadow-[0_0_0_1px_rgba(139,94,60,0.12)]'
+          ? 'border-gold/40 bg-gold/8 shadow-[0_0_0_1px_rgba(201,168,76,0.12)]'
           : gedimmt
             ? 'border-bone/8 bg-surface/40'
             : 'border-bone/10 bg-surface'
@@ -141,14 +141,14 @@ function StatusBadge({
 }) {
   if (istNaechster) {
     return (
-      <span className="flex-shrink-0 rounded-full bg-whiskey/20 px-2.5 py-0.5 text-[11px] font-semibold text-whiskey">
+      <span className="flex-shrink-0 rounded-full bg-gold/20 px-2.5 py-0.5 text-[11px] font-semibold text-gold">
         Als nächstes
       </span>
     )
   }
   if (status === 'walkin') {
     return (
-      <span className="flex-shrink-0 rounded-full bg-whiskey/10 px-2.5 py-0.5 text-[11px] font-semibold text-whiskey/80">
+      <span className="flex-shrink-0 rounded-full bg-gold/10 px-2.5 py-0.5 text-[11px] font-semibold text-gold/80">
         Walk-In
       </span>
     )

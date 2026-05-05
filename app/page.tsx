@@ -7,10 +7,10 @@ export default function HomePage() {
       <div className="w-full max-w-lg space-y-10 text-center">
         {/* Gold-Akzent-Linie */}
         <div className="flex justify-center">
-          <div className="flex items-center gap-3 label-caps text-whiskey">
-            <span className="h-px w-8 bg-whiskey" />
+          <div className="flex items-center gap-3 label-caps text-gold">
+            <span className="h-px w-8 bg-gold" />
             Premium-Buchung für Barbershops
-            <span className="h-px w-8 bg-whiskey" />
+            <span className="h-px w-8 bg-gold" />
           </div>
         </div>
 
@@ -30,7 +30,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/register"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-6 py-3 text-sm font-semibold text-bone transition-all hover:bg-ink/90 hover:shadow-[0_8px_24px_-6px_rgba(245,243,239,0.15)]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-6 py-3 text-sm font-semibold text-background transition-all hover:bg-ink/90"
           >
             Jetzt starten
             <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
@@ -47,7 +47,7 @@ export default function HomePage() {
         <div className="pt-4">
           <Link
             href="/demo"
-            className="text-xs font-medium uppercase tracking-[0.16em] text-coal/50 transition-colors hover:text-whiskey"
+            className="text-xs font-medium uppercase tracking-[0.16em] text-coal/50 transition-colors hover:text-gold"
           >
             Demo ansehen →
           </Link>

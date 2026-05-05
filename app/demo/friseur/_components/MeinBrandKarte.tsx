@@ -11,8 +11,8 @@ import type { Friseur } from '@/lib/mockData'
 export function MeinBrandKarte({ friseur }: { friseur: Friseur }) {
   return (
     <section className="space-y-3">
-      <div className="flex items-center gap-3 label-caps text-whiskey">
-        <span className="h-px w-6 bg-whiskey" />
+      <div className="flex items-center gap-3 label-caps text-gold">
+        <span className="h-px w-6 bg-gold" />
         Mein Brand
       </div>
 
@@ -87,7 +87,7 @@ function StatBlock({
     <div className="space-y-1">
       <div className="flex items-center justify-center gap-1">
         {stern && (
-          <Star className="h-3.5 w-3.5 fill-whiskey text-whiskey" strokeWidth={0} />
+          <Star className="h-3.5 w-3.5 fill-gold text-gold" strokeWidth={0} />
         )}
         <span className="font-sans text-lg font-semibold tabular-nums text-ink">
           {wert}
@@ -104,7 +104,7 @@ function TrendLabel({
   trend: 'wachsend' | 'stabil' | 'schrumpfend'
 }) {
   const map = {
-    wachsend:    { label: 'Wachsend',    farbe: 'text-whiskey font-semibold' },
+    wachsend:    { label: 'Wachsend',    farbe: 'text-gold font-semibold' },
     stabil:      { label: 'Stabil',      farbe: 'text-coal/55' },
     schrumpfend: { label: 'Rückläufig',  farbe: 'text-coal/45' },
   } as const

@@ -24,8 +24,8 @@ export function WalkInHeader({
 
       <header className="flex items-start justify-between border-b border-bone/10 pb-6">
         <div className="space-y-1.5">
-          <div className="flex items-center gap-3 label-caps text-whiskey">
-            <span className="h-px w-6 bg-whiskey" />
+          <div className="flex items-center gap-3 label-caps text-gold">
+            <span className="h-px w-6 bg-gold" />
             Endkunde · Live-Status
           </div>
           <h1 className="text-h1 text-ink">{salonName}</h1>
@@ -33,12 +33,12 @@ export function WalkInHeader({
         </div>
 
         {/* Live-Indikator */}
-        <div className="flex items-center gap-2 rounded-full border border-whiskey/20 bg-whiskey/10 px-3 py-1.5">
+        <div className="flex items-center gap-2 rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-pulse rounded-full bg-whiskey opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-whiskey" />
+            <span className="absolute inline-flex h-full w-full animate-pulse rounded-full bg-gold opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
           </span>
-          <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-whiskey">
+          <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-gold">
             Live jetzt
           </span>
         </div>
