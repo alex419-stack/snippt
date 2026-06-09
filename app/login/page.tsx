@@ -4,9 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -33,74 +30,77 @@ export default function LoginPage() {
     router.refresh()
   }
 
+  const feld =
+    'w-full rounded-[14px] border border-white/[0.1] bg-white/[0.03] px-4 py-[13px] text-[15px] text-snippt-ink placeholder:text-snippt-faint outline-none focus:border-snippt-glow1/60'
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-20">
-      <div className="w-full max-w-sm space-y-8">
-        {/* Wordmark */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-block">
-            <span className="font-serif text-3xl font-semibold tracking-tight text-ink">
+    <main className="snippt-grain relative flex min-h-screen items-center justify-center overflow-hidden bg-snippt-bg font-body text-snippt-ink">
+      <div
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background:
+            'radial-gradient(60% 45% at 50% 0%, rgba(84,104,255,.18), transparent 60%),' +
+            'radial-gradient(40% 35% at 85% 90%, rgba(43,231,255,.10), transparent 60%),' +
+            'linear-gradient(180deg,#08080B,#0C0C12)',
+        }}
+      />
+      <div className="relative z-[1] w-full max-w-sm px-6 py-16">
+        <div className="text-center">
+          <Link href="/" className="font-display text-3xl font-semibold tracking-tight">
+            <span
+              style={{
+                background: 'linear-gradient(100deg,#5468FF,#2BE7FF)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}
+            >
               Snippt
             </span>
           </Link>
-          <p className="text-sm text-coal/60">Melde dich mit deiner E-Mail an.</p>
+          <p className="mt-2 text-[14px] text-snippt-muted">Melde dich mit deiner E-Mail an.</p>
         </div>
 
-        {/* Form-Card */}
-        <div className="rounded-2xl border border-bone/10 bg-surface p-7 space-y-6">
-          {/* Error-Banner — Gold statt Rot (Anti-Toxizität) */}
+        <div className="mt-8 rounded-[20px] border border-white/[0.08] bg-snippt-surface/80 p-7">
           {error && (
-            <div className="rounded-lg border border-whiskey/25 bg-whiskey/8 px-4 py-3 text-sm text-whiskey/90">
+            <div className="mb-5 rounded-[12px] border border-snippt-weg/30 bg-snippt-weg/10 px-4 py-3 text-[13px] text-snippt-weg">
               {error}
             </div>
           )}
-
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-sm font-medium text-coal/80">
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="mb-[6px] block text-[12px] uppercase tracking-[0.12em] text-snippt-faint">
                 E-Mail
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="border-bone/15 bg-bone/5 text-ink placeholder:text-coal/35 focus-visible:ring-whiskey/50"
-              />
+              </label>
+              <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" className={feld} />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-sm font-medium text-coal/80">
+            <div>
+              <label htmlFor="password" className="mb-[6px] block text-[12px] uppercase tracking-[0.12em] text-snippt-faint">
                 Passwort
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                className="border-bone/15 bg-bone/5 text-ink placeholder:text-coal/35 focus-visible:ring-whiskey/50"
-              />
+              </label>
+              <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" className={feld} />
             </div>
-            <Button
+            <button
               type="submit"
-              className="w-full bg-ink text-background hover:bg-ink/90"
               disabled={loading}
+              className="w-full rounded-[16px] p-[15px] text-[16px] font-semibold text-[#070710] disabled:opacity-50"
+              style={{
+                background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
+                boxShadow: '0 12px 34px -10px rgba(84,104,255,.8)',
+              }}
             >
-              {loading ? 'Wird angemeldet…' : 'Anmelden'}
-            </Button>
+              {loading ? 'Wird angemeldet …' : 'Anmelden'}
+            </button>
           </form>
         </div>
 
-        <p className="text-sm text-center text-coal/55">
+        <p className="mt-6 text-center text-[14px] text-snippt-muted">
           Noch kein Konto?{' '}
-          <Link href="/register" className="font-medium text-ink hover:text-whiskey transition-colors">
+          <Link href="/register" className="font-medium text-snippt-glow2 hover:text-snippt-ink">
             Registrieren
           </Link>
         </p>
       </div>
-    </div>
+    </main>
   )
 }
