@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { QueueBoard } from './_components/QueueBoard'
+import { AutoRefresh } from '@/app/_components/AutoRefresh'
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
 
 const AKTIV = ['wartend', 'unterwegs', 'da', 'aufgerufen']
@@ -62,6 +63,7 @@ export default async function DashboardPage() {
       />
 
       <div className="relative z-[1] mx-auto w-full max-w-md px-5 pb-12 pt-12">
+        <AutoRefresh seconds={5} />
         <header className="flex items-end justify-between">
           <div>
             <h1 className="font-display text-2xl font-semibold tracking-tight">Deine Reihe</h1>

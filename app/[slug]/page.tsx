@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { AnstellenButton } from './_components/AnstellenButton'
+import { AutoRefresh } from '@/app/_components/AutoRefresh'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -44,6 +45,7 @@ export default async function ProfilPage({ params }: Props) {
       />
 
       <div className="relative z-[1] mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-12">
+        <AutoRefresh seconds={12} />
         {/* Live-Anzeige */}
         <div className="mb-6 flex items-center justify-between">
           <span className="inline-flex items-center gap-[7px] text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
