@@ -1,4 +1,5 @@
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
+import { fertigNaechster } from '../actions'
 
 // Status-Darstellung: Punkt-Farbe + Text. Spiegelt das freigegebene Design (SG2).
 const STATUS_META: Record<QueueStatus, { dot: string; label: string }> = {
@@ -52,16 +53,19 @@ export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
             <span className="text-[12px] text-snippt-faint">wartet {now.wartetMin} Min</span>
           </div>
           <StatusChip entry={now} />
-          <button
-            type="button"
-            className="mt-[13px] flex w-full items-center justify-center gap-2 rounded-[13px] p-[14px] text-[15px] font-semibold text-[#070710]"
-            style={{
-              background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
-              boxShadow: '0 10px 26px -10px rgba(84,104,255,.8)',
-            }}
-          >
-            Fertig → Nächsten aufrufen
-          </button>
+          <form action={fertigNaechster}>
+            <input type="hidden" name="eintragId" value={now.id} />
+            <button
+              type="submit"
+              className="mt-[13px] flex w-full items-center justify-center gap-2 rounded-[13px] p-[14px] text-[15px] font-semibold text-[#070710]"
+              style={{
+                background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
+                boxShadow: '0 10px 26px -10px rgba(84,104,255,.8)',
+              }}
+            >
+              Fertig → Nächsten aufrufen
+            </button>
+          </form>
         </div>
       )}
 
