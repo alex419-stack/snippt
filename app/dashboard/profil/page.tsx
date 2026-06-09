@@ -11,7 +11,7 @@ export default async function ProfilPage() {
 
   const { data: friseur } = await supabase
     .from('friseur')
-    .select('name, slug, rolle, bio, spezialitaeten, instagram, foto_url')
+    .select('name, slug, rolle, bio, spezialitaeten, instagram, foto_url, modus, oeffnet, schliesst')
     .eq('user_id', user.id)
     .single()
 
@@ -64,6 +64,53 @@ export default async function ProfilPage() {
           <div>
             <label className={label} htmlFor="instagram">Instagram</label>
             <input id="instagram" name="instagram" defaultValue={friseur?.instagram ?? ''} className={feld} placeholder="dein.handle (ohne @)" />
+          </div>
+
+          {/* Betriebsart: Warteschlange ODER Termine */}
+          <div className="border-t border-white/[0.08] pt-5">
+            <span className={label}>Wie arbeitest du?</span>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="modus"
+                  value="warteschlange"
+                  defaultChecked={(friseur?.modus ?? 'warteschlange') === 'warteschlange'}
+                  className="peer sr-only"
+                />
+                <span className="block rounded-[14px] border border-white/[0.1] bg-white/[0.02] p-3 text-[14px] text-snippt-muted peer-checked:border-snippt-glow1 peer-checked:bg-snippt-glow1/10 peer-checked:text-snippt-ink">
+                  <b className="font-semibold">Warteschlange</b>
+                  <br />
+                  <small className="text-snippt-faint">Spontan, ohne feste Zeiten</small>
+                </span>
+              </label>
+              <label className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="modus"
+                  value="termine"
+                  defaultChecked={friseur?.modus === 'termine'}
+                  className="peer sr-only"
+                />
+                <span className="block rounded-[14px] border border-white/[0.1] bg-white/[0.02] p-3 text-[14px] text-snippt-muted peer-checked:border-snippt-glow1 peer-checked:bg-snippt-glow1/10 peer-checked:text-snippt-ink">
+                  <b className="font-semibold">Termine</b>
+                  <br />
+                  <small className="text-snippt-faint">Feste Uhrzeiten buchbar</small>
+                </span>
+              </label>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <div>
+                <label className={label} htmlFor="oeffnet">Öffnet</label>
+                <input type="time" id="oeffnet" name="oeffnet" defaultValue={(friseur?.oeffnet ?? '09:00').slice(0, 5)} className={feld} />
+              </div>
+              <div>
+                <label className={label} htmlFor="schliesst">Schließt</label>
+                <input type="time" id="schliesst" name="schliesst" defaultValue={(friseur?.schliesst ?? '18:00').slice(0, 5)} className={feld} />
+              </div>
+            </div>
+            <p className="mt-[6px] text-[11px] text-snippt-faint">Öffnungszeiten gelten für den Termin-Modus (buchbar: heute + 7 Tage).</p>
           </div>
 
           <button

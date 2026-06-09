@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { AnstellenButton } from './_components/AnstellenButton'
+import { TerminBuchen } from './_components/TerminBuchen'
 import { AutoRefresh } from '@/app/_components/AutoRefresh'
 
 interface Props {
@@ -13,7 +14,7 @@ export default async function ProfilPage({ params }: Props) {
 
   const { data: friseur } = await supabase
     .from('friseur')
-    .select('id, name, slug, foto_url, bio, rolle, spezialitaeten, instagram, stempel_anzahl, stempel_belohnung')
+    .select('id, name, slug, foto_url, bio, rolle, spezialitaeten, instagram, stempel_anzahl, stempel_belohnung, modus, oeffnet, schliesst, slot_minuten')
     .eq('slug', slug)
     .single()
 
@@ -24,6 +25,11 @@ export default async function ProfilPage({ params }: Props) {
   const status = (statusRaw as { wartende?: number; wartezeit_min?: number } | null) ?? null
   const wartende = status?.wartende ?? 0
   const wartezeitMin = status?.wartezeit_min ?? 0
+
+  const istTermine = friseur.modus === 'termine'
+  const oeffnet = (friseur.oeffnet ?? '09:00:00').slice(0, 5)
+  const schliesst = (friseur.schliesst ?? '18:00:00').slice(0, 5)
+  const slotMin = friseur.slot_minuten ?? 30
 
   // Stempelkarte: Konfig echt; der persönliche Stempelstand wird später
   // geräteseitig (besucher_token) nachgeladen — hier Startwert 0.
@@ -45,7 +51,7 @@ export default async function ProfilPage({ params }: Props) {
       />
 
       <div className="relative z-[1] mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-12">
-        <AutoRefresh seconds={12} />
+        {!istTermine && <AutoRefresh seconds={12} />}
         {/* Live-Anzeige */}
         <div className="mb-6 flex items-center justify-between">
           <span className="inline-flex items-center gap-[7px] text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
@@ -116,42 +122,53 @@ export default async function ProfilPage({ params }: Props) {
           </div>
         )}
 
-        {/* Live-Wartezeit Hero */}
-        <div
-          className="relative overflow-hidden rounded-[22px] border border-white/[0.12] p-[26px_22px] text-center"
-          style={{
-            background:
-              'radial-gradient(120% 90% at 50% 0%, rgba(84,104,255,.22), transparent 60%), #141420',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,.05)',
-          }}
-        >
-          <div className="text-[12px] uppercase tracking-[0.16em] text-snippt-muted">Wartezeit gerade</div>
-          <div
-            className="my-[6px] font-display text-[54px] font-semibold leading-none tracking-tight"
-            style={{
-              background: 'linear-gradient(180deg,#fff,#b9c0ff)',
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              color: 'transparent',
-              textShadow: '0 0 40px rgba(84,104,255,.4)',
-            }}
-          >
-            {wartende === 0 ? 'Sofort' : `≈ ${wartezeitMin} Min`}
+        {istTermine ? (
+          /* Termin-Modus: Tag + freie Zeit buchen */
+          <div className="rounded-[22px] border border-white/[0.12] bg-snippt-surface p-[22px]">
+            <div className="text-[12px] uppercase tracking-[0.16em] text-snippt-muted">Termin buchen</div>
+            <p className="mt-1 text-[13px] text-snippt-faint">Wähle einen Tag und eine freie Zeit.</p>
+            <TerminBuchen slug={slug} oeffnet={oeffnet} schliesst={schliesst} slotMin={slotMin} />
           </div>
-          <div className="text-[13px] text-snippt-muted">
-            {wartende === 0 ? (
-              'Niemand wartet gerade — du kommst direkt dran'
-            ) : (
-              <>
-                <b className="text-snippt-ink">{wartende}</b> in der Reihe vor dir
-              </>
-            )}
-          </div>
-          <AnstellenButton slug={slug} />
-        </div>
-        <p className="mt-[11px] text-center text-[12px] text-snippt-faint">
-          Du wirst benachrichtigt, sobald du dran bist.
-        </p>
+        ) : (
+          <>
+            {/* Warteschlangen-Modus: Live-Wartezeit Hero */}
+            <div
+              className="relative overflow-hidden rounded-[22px] border border-white/[0.12] p-[26px_22px] text-center"
+              style={{
+                background:
+                  'radial-gradient(120% 90% at 50% 0%, rgba(84,104,255,.22), transparent 60%), #141420',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,.05)',
+              }}
+            >
+              <div className="text-[12px] uppercase tracking-[0.16em] text-snippt-muted">Wartezeit gerade</div>
+              <div
+                className="my-[6px] font-display text-[54px] font-semibold leading-none tracking-tight"
+                style={{
+                  background: 'linear-gradient(180deg,#fff,#b9c0ff)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                  textShadow: '0 0 40px rgba(84,104,255,.4)',
+                }}
+              >
+                {wartende === 0 ? 'Sofort' : `≈ ${wartezeitMin} Min`}
+              </div>
+              <div className="text-[13px] text-snippt-muted">
+                {wartende === 0 ? (
+                  'Niemand wartet gerade — du kommst direkt dran'
+                ) : (
+                  <>
+                    <b className="text-snippt-ink">{wartende}</b> in der Reihe vor dir
+                  </>
+                )}
+              </div>
+              <AnstellenButton slug={slug} />
+            </div>
+            <p className="mt-[11px] text-center text-[12px] text-snippt-faint">
+              Du wirst benachrichtigt, sobald du dran bist.
+            </p>
+          </>
+        )}
 
         {/* Stempelkarte */}
         <div

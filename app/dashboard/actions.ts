@@ -92,6 +92,9 @@ export async function profilSpeichern(formData: FormData) {
       spezialitaeten: leerZuNull(formData.get('spezialitaeten')),
       instagram: leerZuNull(formData.get('instagram'))?.replace(/^@/, '') ?? null,
       foto_url: leerZuNull(formData.get('foto_url')),
+      modus: String(formData.get('modus')) === 'termine' ? 'termine' : 'warteschlange',
+      oeffnet: leerZuNull(formData.get('oeffnet')),
+      schliesst: leerZuNull(formData.get('schliesst')),
     })
     .eq('id', friseur.id)
 
