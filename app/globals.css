@@ -160,3 +160,26 @@
     @apply font-sans text-[11px] font-medium uppercase tracking-[0.18em];
   }
 }
+
+/* ── Snippt v1 — Dark/Glow-Helfer (Pivot 2026-06-09) ────────────────────────
+ * Atmosphäre für die echte App: statische Glows + feine Körnung, handy-schonend.
+ */
+.snippt-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes snippt-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.7); }
+}
+.snippt-pulse { animation: snippt-pulse 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .snippt-pulse { animation: none; }
+}

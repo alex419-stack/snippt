@@ -53,10 +53,31 @@ const config: Config = {
         coal:    "rgb(var(--tw-coal) / <alpha-value>)",
         surface: "rgb(var(--tw-surface) / <alpha-value>)",
         gold: "rgb(var(--tw-gold) / <alpha-value>)",  // Kupfer (light) / Warmgold (dark) — per CSS-Var dual-mode
+
+        // ── Snippt v1 — Dark/Glow-Design (Pivot 2026-06-09, freigegeben SG2) ──
+        // Eigenständige Palette für die echte App (lässt /demo-Pitch-Theme unberührt).
+        snippt: {
+          bg:       "#08080B",  // Obsidian-Hintergrund
+          bg2:      "#0C0C12",
+          surface:  "#141420",  // Karten/Panels
+          surface2: "#1B1B2A",
+          ink:      "#F4F2EE",  // Primärtext (warmes Off-White)
+          muted:    "#9D9BAB",  // Sekundärtext
+          faint:    "#6A6878",  // Tertiär/Hinweise
+          glow1:    "#5468FF",  // Signatur-Glow Indigo
+          glow2:    "#2BE7FF",  // Signatur-Glow Cyan
+          ember:    "#FF8A4C",  // warmer Gegenpol — nur Stempelkarte/Belohnung
+          da:       "#37E59B",  // Status: ist da
+          weg:      "#FFC24B",  // Status: unterwegs
+          still:    "#6A6878",  // Status: keine Antwort
+        },
       },
       fontFamily: {
-        sans:  ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],
-        serif: ["var(--font-serif)", "Georgia", "Times New Roman", "serif"],
+        sans:    ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],
+        serif:   ["var(--font-serif)", "Georgia", "Times New Roman", "serif"],
+        // Snippt v1
+        display: ['"Clash Display"', "system-ui", "sans-serif"],
+        body:    ['"General Sans"', "system-ui", "-apple-system", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

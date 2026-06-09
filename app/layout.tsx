@@ -24,6 +24,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de" className={`${inter.variable} ${playfair.variable}`}>
+      {/* Snippt v1 Design-Fonts (Clash Display + General Sans) via Fontshare-CDN */}
+      <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+      <link
+        href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=general-sans@400,500,600&display=swap"
+        rel="stylesheet"
+      />
       <body className="font-sans antialiased">{children}</body>
     </html>
   )
