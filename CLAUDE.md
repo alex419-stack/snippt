@@ -5,6 +5,14 @@
 
 ---
 
+## ⚠️ PIVOT 2026-06-09 — zuerst lesen
+
+Snippt wurde von „Salon-Tool" auf **den einzelnen Friseur** umgestellt. Gültiges Konzept: `docs/superpowers/specs/2026-06-09-snippt-mvp-design.md` · Bau-Etappen: `docs/superpowers/plans/2026-06-09-snippt-mvp-roadmap.md`.
+
+**Überholt (nur noch Historie, weiter unten in dieser Datei):** Salonchef-Dashboard, Wettbewerbs-Matrix, Multi-Tenant-Umbau „M1", das warm-helle Design-System. Kern jetzt: eine **Live-Warteschlange ohne Uhrzeiten** pro Friseur + **digitale Stempelkarte**, als **installierbare Web-App (PWA)**. Neue Design-Richtung: **dunkel, leuchtend, modern, hochwertig**.
+
+---
+
 ## Projekt-Identität
 
 - **App-Name:** Snippt

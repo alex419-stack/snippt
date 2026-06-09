@@ -3,6 +3,10 @@ Stand: 03.05.2026 | Branch: m0-mockup
 
 ---
 
+> ⚠️ **Überholt seit Pivot 2026-06-09.** Dieser Status beschreibt den alten Salon-fokussierten Stand. Gültig ist jetzt das Einzel-Friseur-Konzept in `docs/superpowers/specs/2026-06-09-snippt-mvp-design.md` und die Roadmap in `docs/superpowers/plans/2026-06-09-snippt-mvp-roadmap.md`. Unten nur noch als Historie.
+
+---
+
 ## Was aktuell gebaut und funktionsfähig ist
 
 ### Auth & Onboarding
