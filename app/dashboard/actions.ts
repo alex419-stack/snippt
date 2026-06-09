@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 const AKTIV = ['wartend', 'unterwegs', 'da', 'aufgerufen']
 
@@ -62,4 +63,39 @@ export async function fertigNaechster(formData: FormData) {
   }
 
   revalidatePath('/dashboard')
+}
+
+// Friseur speichert sein öffentliches Profil (Personalbranding).
+function leerZuNull(v: FormDataEntryValue | null) {
+  const s = String(v ?? '').trim()
+  return s.length ? s : null
+}
+
+export async function profilSpeichern(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  const { data: friseur } = await supabase
+    .from('friseur')
+    .select('id, slug')
+    .eq('user_id', user.id)
+    .single()
+  if (!friseur) return
+
+  await supabase
+    .from('friseur')
+    .update({
+      name: leerZuNull(formData.get('name')) ?? 'Friseur',
+      rolle: leerZuNull(formData.get('rolle')),
+      bio: leerZuNull(formData.get('bio')),
+      spezialitaeten: leerZuNull(formData.get('spezialitaeten')),
+      instagram: leerZuNull(formData.get('instagram'))?.replace(/^@/, '') ?? null,
+      foto_url: leerZuNull(formData.get('foto_url')),
+    })
+    .eq('id', friseur.id)
+
+  revalidatePath('/dashboard')
+  revalidatePath(`/${friseur.slug}`)
+  redirect('/dashboard')
 }

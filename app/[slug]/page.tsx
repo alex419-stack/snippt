@@ -13,7 +13,7 @@ export default async function ProfilPage({ params }: Props) {
 
   const { data: friseur } = await supabase
     .from('friseur')
-    .select('id, name, slug, foto_url, bio, stempel_anzahl, stempel_belohnung')
+    .select('id, name, slug, foto_url, bio, rolle, spezialitaeten, instagram, stempel_anzahl, stempel_belohnung')
     .eq('slug', slug)
     .single()
 
@@ -77,9 +77,44 @@ export default async function ProfilPage({ params }: Props) {
           )}
           <div>
             <h1 className="font-display text-[21px] font-semibold tracking-tight">{friseur.name}</h1>
-            {friseur.bio && <p className="mt-[3px] text-[13px] text-snippt-muted">{friseur.bio}</p>}
+            {friseur.rolle && <p className="mt-[3px] text-[13px] text-snippt-glow2">{friseur.rolle}</p>}
           </div>
         </div>
+
+        {/* Kurzes Profil — Personalbranding */}
+        {(friseur.bio || friseur.spezialitaeten || friseur.instagram) && (
+          <div className="mb-6 space-y-3">
+            {friseur.bio && (
+              <p className="text-[14px] leading-relaxed text-snippt-muted">{friseur.bio}</p>
+            )}
+            {friseur.spezialitaeten && (
+              <div className="flex flex-wrap gap-2">
+                {friseur.spezialitaeten
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+                  .map((s) => (
+                    <span
+                      key={s}
+                      className="rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-[5px] text-[12px] text-snippt-ink"
+                    >
+                      {s}
+                    </span>
+                  ))}
+              </div>
+            )}
+            {friseur.instagram && (
+              <a
+                href={`https://instagram.com/${friseur.instagram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[13px] text-snippt-muted hover:text-snippt-ink"
+              >
+                @{friseur.instagram}
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Live-Wartezeit Hero */}
         <div

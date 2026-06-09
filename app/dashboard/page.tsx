@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { QueueBoard } from './_components/QueueBoard'
 import { AutoRefresh } from '@/app/_components/AutoRefresh'
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
@@ -77,6 +78,12 @@ export default async function DashboardPage() {
                 snippt.de/{friseur?.slug ?? 'dein-name'}
               </a>
             </p>
+            <Link
+              href="/dashboard/profil"
+              className="mt-2 inline-block text-[12px] text-snippt-glow2 hover:text-snippt-ink"
+            >
+              Profil bearbeiten →
+            </Link>
           </div>
           <span className="text-[12px] uppercase tracking-[0.14em] text-snippt-faint">
             {entries.length} warten
