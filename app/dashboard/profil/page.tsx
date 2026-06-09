@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { profilSpeichern } from '../actions'
+import { FotoUpload } from './_components/FotoUpload'
 
 export default async function ProfilPage() {
   const supabase = await createClient()
@@ -40,6 +41,10 @@ export default async function ProfilPage() {
 
         <form action={profilSpeichern} className="mt-7 space-y-5">
           <div>
+            <span className={label}>Profilfoto</span>
+            <FotoUpload userId={user.id} initialUrl={friseur?.foto_url ?? null} />
+          </div>
+          <div>
             <label className={label} htmlFor="name">Name</label>
             <input id="name" name="name" defaultValue={friseur?.name ?? ''} className={feld} placeholder="z. B. Mehmet Yılmaz" />
           </div>
@@ -59,11 +64,6 @@ export default async function ProfilPage() {
           <div>
             <label className={label} htmlFor="instagram">Instagram</label>
             <input id="instagram" name="instagram" defaultValue={friseur?.instagram ?? ''} className={feld} placeholder="dein.handle (ohne @)" />
-          </div>
-          <div>
-            <label className={label} htmlFor="foto_url">Foto-Link</label>
-            <input id="foto_url" name="foto_url" defaultValue={friseur?.foto_url ?? ''} className={feld} placeholder="https://…/foto.jpg" />
-            <p className="mt-[6px] text-[11px] text-snippt-faint">Vorerst per Link. Direktes Hochladen kommt später.</p>
           </div>
 
           <button

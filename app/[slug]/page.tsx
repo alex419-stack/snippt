@@ -91,9 +91,9 @@ export default async function ProfilPage({ params }: Props) {
               <div className="flex flex-wrap gap-2">
                 {friseur.spezialitaeten
                   .split(',')
-                  .map((s) => s.trim())
+                  .map((s: string) => s.trim())
                   .filter(Boolean)
-                  .map((s) => (
+                  .map((s: string) => (
                     <span
                       key={s}
                       className="rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-[5px] text-[12px] text-snippt-ink"
