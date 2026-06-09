@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { AnstellenButton } from './_components/AnstellenButton'
 import { TerminBuchen } from './_components/TerminBuchen'
+import { StempelKarte } from './_components/StempelKarte'
 import { AutoRefresh } from '@/app/_components/AutoRefresh'
 
 interface Props {
@@ -30,12 +31,6 @@ export default async function ProfilPage({ params }: Props) {
   const oeffnet = (friseur.oeffnet ?? '09:00:00').slice(0, 5)
   const schliesst = (friseur.schliesst ?? '18:00:00').slice(0, 5)
   const slotMin = friseur.slot_minuten ?? 30
-
-  // Stempelkarte: Konfig echt; der persönliche Stempelstand wird später
-  // geräteseitig (besucher_token) nachgeladen — hier Startwert 0.
-  const stempelGesamt = friseur.stempel_anzahl ?? 10
-  const stempelHaben = 0
-  const belohnung = friseur.stempel_belohnung ?? '1 Schnitt gratis'
 
   return (
     <main className="snippt-grain relative min-h-screen overflow-hidden bg-snippt-bg font-body text-snippt-ink">
@@ -170,40 +165,12 @@ export default async function ProfilPage({ params }: Props) {
           </>
         )}
 
-        {/* Stempelkarte */}
-        <div
-          className="mt-auto rounded-[18px] p-[16px_18px]"
-          style={{
-            background: 'linear-gradient(120deg,rgba(255,138,76,.10),rgba(255,138,76,.02))',
-            border: '1px solid rgba(255,138,76,.18)',
-          }}
-        >
-          <div className="mb-[11px] flex items-center justify-between">
-            <span className="text-[12px] uppercase tracking-[0.14em] text-snippt-ember">Stempelkarte</span>
-            <span className="font-display text-[15px] text-snippt-ink">
-              {stempelHaben} / {stempelGesamt}
-            </span>
+        {/* Stempelkarte — nur im Warteschlangen-Modus (dort werden Stempel verdient) */}
+        {!istTermine && (
+          <div className="mt-auto">
+            <StempelKarte slug={slug} />
           </div>
-          <div className="flex flex-wrap gap-[7px]">
-            {Array.from({ length: stempelGesamt }).map((_, i) => (
-              <i
-                key={i}
-                className="h-[18px] w-[18px] rounded-full"
-                style={
-                  i < stempelHaben
-                    ? {
-                        background: 'radial-gradient(circle at 35% 30%,#ffb88a,#FF8A4C)',
-                        boxShadow: '0 0 10px -1px #FF8A4C',
-                      }
-                    : { border: '1px solid rgba(255,138,76,.35)' }
-                }
-              />
-            ))}
-          </div>
-          <div className="mt-[11px] text-[12px] text-snippt-muted">
-            Noch <b className="text-snippt-ink">{Math.max(stempelGesamt - stempelHaben, 0)} Schnitte</b> bis {belohnung}.
-          </div>
-        </div>
+        )}
 
         <div className="mt-[14px] flex items-center justify-center gap-2 text-[12px] text-snippt-faint">
           Tipp:{' '}
