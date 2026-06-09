@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { AnstellenButton } from './_components/AnstellenButton'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -17,13 +18,16 @@ export default async function ProfilPage({ params }: Props) {
 
   if (!friseur) notFound()
 
-  // Hinweis: Wartezeit + Stempelstand sind in dieser Etappe (SG4) noch Beispielwerte.
-  // Echte Anbindung (Warteschlange anlegen, Stempelstand des Kunden) folgt mit der
-  // serverseitigen API (Service-Role) im Verkabelungs-Schritt.
-  const wartezeitMin = 25
-  const vorDir = 3
+  // Echte Live-Wartezeit über die kontrollierte RPC (anon-fähig).
+  const { data: statusRaw } = await supabase.rpc('warteschlange_status', { p_slug: slug })
+  const status = (statusRaw as { wartende?: number; wartezeit_min?: number } | null) ?? null
+  const wartende = status?.wartende ?? 0
+  const wartezeitMin = status?.wartezeit_min ?? 0
+
+  // Stempelkarte: Konfig echt; der persönliche Stempelstand wird später
+  // geräteseitig (besucher_token) nachgeladen — hier Startwert 0.
   const stempelGesamt = friseur.stempel_anzahl ?? 10
-  const stempelHaben = 7
+  const stempelHaben = 0
   const belohnung = friseur.stempel_belohnung ?? '1 Schnitt gratis'
 
   return (
@@ -95,21 +99,18 @@ export default async function ProfilPage({ params }: Props) {
               textShadow: '0 0 40px rgba(84,104,255,.4)',
             }}
           >
-            ≈ {wartezeitMin} Min
+            {wartende === 0 ? 'Sofort' : `≈ ${wartezeitMin} Min`}
           </div>
           <div className="text-[13px] text-snippt-muted">
-            <b className="text-snippt-ink">{vorDir}</b> vor dir in der Reihe
+            {wartende === 0 ? (
+              'Niemand wartet gerade — du kommst direkt dran'
+            ) : (
+              <>
+                <b className="text-snippt-ink">{wartende}</b> in der Reihe vor dir
+              </>
+            )}
           </div>
-          <button
-            type="button"
-            className="mt-[18px] w-full rounded-[16px] p-[17px] text-[17px] font-semibold text-[#070710]"
-            style={{
-              background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
-              boxShadow: '0 12px 34px -10px rgba(84,104,255,.8), inset 0 0 0 1px rgba(255,255,255,.12)',
-            }}
-          >
-            Jetzt anstellen
-          </button>
+          <AnstellenButton slug={slug} />
         </div>
         <p className="mt-[11px] text-center text-[12px] text-snippt-faint">
           Du wirst benachrichtigt, sobald du dran bist.
