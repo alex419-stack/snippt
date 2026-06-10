@@ -1,189 +1,144 @@
-import type { Termin } from '@/lib/mockData'
+'use client'
+
+import { useState } from 'react'
 
 /**
- * BuchungsKalender — Wochen-Grid aus Kundensicht.
- *
- * Zeigt zwei Wochen: aktuelle (mit Marco's Terminen) + nächste (alle frei).
- * Belegte Slots = gedimmt, freie Slots = buchbar (gold hover).
- *
- * Aus Kunden-Perspektive: frei = buchbar, belegt = nicht buchbar.
- * Unterschied zum Friseur-WochenRaster: hier ist "frei" das Positive.
- * Server Component.
+ * BuchungsKalender — Vereinfachter Tag+Slot-Picker für einen Friseur.
+ * Horizontale Tage-Chips, darunter Grid mit freien/belegten Zeiten.
+ * Dark/Glow-Design. Rein visuell, keine echte Buchungslogik.
  */
 
-// Aktuelle Demo-Woche (diese Woche)
-const DIESE_WOCHE = [
-  { label: 'Mo', tagNummer: '27', datum: '2026-04-27' },
-  { label: 'Di', tagNummer: '28', datum: '2026-04-28' },
-  { label: 'Mi', tagNummer: '29', datum: '2026-04-29' },
-  { label: 'Do', tagNummer: '30', datum: '2026-04-30' },
-  { label: 'Fr', tagNummer: '01', datum: '2026-05-01' },
-  { label: 'Sa', tagNummer: '02', datum: '2026-05-02' },
+// Nächste 7 Tage (Demo-Daten relativ zu Fr 13. Jun 2026)
+const TAGE = [
+  { id: 'd0', label: 'Fr',  nummer: '13', heute: true  },
+  { id: 'd1', label: 'Sa',  nummer: '14', heute: false },
+  { id: 'd2', label: 'Mo',  nummer: '16', heute: false },
+  { id: 'd3', label: 'Di',  nummer: '17', heute: false },
+  { id: 'd4', label: 'Mi',  nummer: '18', heute: false },
+  { id: 'd5', label: 'Do',  nummer: '19', heute: false },
+  { id: 'd6', label: 'Fr',  nummer: '20', heute: false },
 ]
 
-// Nächste Woche (keine Mockdaten = alle frei)
-const NAECHSTE_WOCHE = [
-  { label: 'Mo', tagNummer: '04', datum: '2026-05-04' },
-  { label: 'Di', tagNummer: '05', datum: '2026-05-05' },
-  { label: 'Mi', tagNummer: '06', datum: '2026-05-06' },
-  { label: 'Do', tagNummer: '07', datum: '2026-05-07' },
-  { label: 'Fr', tagNummer: '08', datum: '2026-05-08' },
-  { label: 'Sa', tagNummer: '09', datum: '2026-05-09' },
-]
-
-// Buchbare Slot-Stunden (volle Stunden 9–18)
-const SLOT_STUNDEN = [9, 10, 11, 12, 13, 14, 15, 16, 17]
-
-export function BuchungsKalender({
-  termine,
-  heuteDatum,
-}: {
-  termine: Termin[]
-  heuteDatum: string
-}) {
-  // Belegte Zellen: Set aus "datum|stunde"
-  const belegt = new Set<string>()
-  for (const t of termine) {
-    const datum = t.start.slice(0, 10)
-    const stunde = parseInt(t.start.slice(11, 13), 10)
-    if (stunde >= 9 && stunde <= 18) {
-      belegt.add(`${datum}|${stunde}`)
-    }
-  }
-
-  return (
-    <section className="space-y-4">
-      <div className="flex items-center gap-3 label-caps text-coal/50">
-        <span className="h-px w-6 bg-coal/20" />
-        Termin vorab buchen
-      </div>
-
-      <KalenderGrid
-        tage={DIESE_WOCHE}
-        belegt={belegt}
-        heuteDatum={heuteDatum}
-        wochenLabel="Diese Woche"
-        monat="April / Mai"
-      />
-
-      <KalenderGrid
-        tage={NAECHSTE_WOCHE}
-        belegt={belegt}
-        heuteDatum={heuteDatum}
-        wochenLabel="Nächste Woche"
-        monat="Mai"
-      />
-    </section>
-  )
+// Verfügbare Slots pro Tag — null = belegt
+const SLOTS_PRO_TAG: Record<string, (string | null)[]> = {
+  d0: [null, null, null, '15:00', null, '16:30', null, null],       // Heute — nachmittags fast voll
+  d1: ['09:00', '09:30', null, '10:30', '11:00', null, '12:00', '14:00', '14:30', null, '16:00'],
+  d2: ['09:00', null, '10:00', '10:30', null, '12:00', '13:00', null, '15:30', '16:00'],
+  d3: [null, '09:30', '10:00', null, '11:30', '12:00', '13:00', '14:00', null, '16:30'],
+  d4: ['09:00', '09:30', '10:00', '10:30', null, null, '13:00', '14:00', '15:00', '16:00'],
+  d5: [null, '10:00', '10:30', '11:00', '11:30', '13:30', '14:00', null, '16:00'],
+  d6: ['09:00', null, '10:30', null, '12:00', '13:00', '14:30', '15:00', null, '16:30'],
 }
 
-function KalenderGrid({
-  tage,
-  belegt,
-  heuteDatum,
-  wochenLabel,
-  monat,
-}: {
-  tage: { label: string; tagNummer: string; datum: string }[]
-  belegt: Set<string>
-  heuteDatum: string
-  wochenLabel: string
-  monat: string
-}) {
+export function BuchungsKalender() {
+  const [tagIdx, setTagIdx] = useState<string>('d1') // Sa vorgewählt (Heute fast voll)
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
+
+  const slots = SLOTS_PRO_TAG[tagIdx] ?? []
+  const freieSlots = slots.filter(Boolean) as string[]
+
   return (
-    <div className="rounded-2xl border border-bone/10 bg-surface overflow-hidden">
-      {/* Wochen-Kopf */}
-      <div className="flex items-baseline justify-between border-b border-bone/8 px-4 py-2.5">
-        <span className="text-xs font-semibold text-coal/60">{wochenLabel}</span>
-        <span className="text-[11px] text-coal/35">{monat}</span>
+    <section>
+      <div className="mb-3">
+        <span className="text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
+          Datum &amp; Uhrzeit
+        </span>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[340px] border-collapse text-center">
-          {/* Tag-Kopfzeile */}
-          <thead>
-            <tr>
-              <th className="w-8 border-b border-r border-bone/8 py-2 text-[10px] font-medium text-coal/25" />
-              {tage.map((tag) => {
-                const istHeute = tag.datum === heuteDatum
-                const istVergangenheit = tag.datum < heuteDatum
+      {/* Tage-Chips */}
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {TAGE.map((tag) => {
+          const isSelected = tag.id === tagIdx
+          return (
+            <button
+              key={tag.id}
+              type="button"
+              onClick={() => {
+                setTagIdx(tag.id)
+                setSelectedSlot(null)
+              }}
+              className={`flex-none rounded-full border px-4 py-[9px] text-center transition-all ${
+                isSelected
+                  ? 'border-snippt-glow1 bg-snippt-glow1/15 text-snippt-ink'
+                  : 'border-white/[0.08] bg-white/[0.02] text-snippt-muted hover:border-white/20 hover:text-snippt-ink'
+              }`}
+            >
+              <div className={`text-[11px] uppercase tracking-[0.12em] ${isSelected ? 'text-snippt-glow2' : 'text-snippt-faint'}`}>
+                {tag.label}
+              </div>
+              <div className="text-[16px] font-semibold leading-tight tabular-nums">
+                {tag.nummer}
+              </div>
+              {tag.heute && (
+                <div className={`text-[10px] ${isSelected ? 'text-snippt-glow2' : 'text-snippt-faint'}`}>
+                  heute
+                </div>
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Zeit-Grid */}
+      <div
+        className="mt-3 rounded-[16px] border border-white/[0.07] p-4"
+        style={{ background: 'rgba(20,20,32,.8)' }}
+      >
+        {freieSlots.length === 0 ? (
+          <p className="py-4 text-center text-[13px] text-snippt-faint">
+            Heute keine freien Slots mehr — wähle einen anderen Tag.
+          </p>
+        ) : (
+          <div className="grid grid-cols-4 gap-2">
+            {slots.map((slot, i) => {
+              if (!slot) {
+                // Belegt
                 return (
-                  <th
-                    key={tag.datum}
-                    className={`border-b border-bone/8 py-2 text-[10px] font-semibold ${
-                      istHeute
-                        ? 'text-gold'
-                        : istVergangenheit
-                          ? 'text-coal/25'
-                          : 'text-coal/55'
-                    }`}
+                  <div
+                    key={i}
+                    className="flex h-[42px] items-center justify-center rounded-[10px] border border-white/[0.04] bg-white/[0.02]"
                   >
-                    <div>{tag.label}</div>
-                    <div className={`text-[9px] ${istHeute ? 'text-gold/70' : 'text-coal/30'}`}>
-                      {tag.tagNummer}
-                    </div>
-                  </th>
+                    <span className="h-1.5 w-1.5 rounded-full bg-snippt-faint/40" />
+                  </div>
                 )
-              })}
-            </tr>
-          </thead>
+              }
 
-          {/* Stunden-Zeilen */}
-          <tbody>
-            {SLOT_STUNDEN.map((stunde) => (
-              <tr key={stunde}>
-                <td className="border-r border-bone/8 py-1 pr-1 text-right text-[9px] tabular-nums text-coal/25">
-                  {stunde}
-                </td>
-                {tage.map((tag) => {
-                  const istVergangenheit = tag.datum < heuteDatum
-                  const istHeuteUndVorbei =
-                    tag.datum === heuteDatum && stunde < 14 // Demo: vor 13:30 vorbei
-                  const istBelegt = belegt.has(`${tag.datum}|${stunde}`)
-                  const nichtBuchbar = istVergangenheit || istHeuteUndVorbei || istBelegt
+              const isSelected = selectedSlot === slot
+              return (
+                <button
+                  key={slot}
+                  type="button"
+                  onClick={() => setSelectedSlot(isSelected ? null : slot)}
+                  className={`h-[42px] rounded-[10px] border text-[13px] font-semibold tabular-nums transition-all ${
+                    isSelected
+                      ? 'border-snippt-glow1 bg-snippt-glow1/20 text-snippt-ink'
+                      : 'border-white/[0.10] bg-white/[0.03] text-snippt-muted hover:border-snippt-glow1/40 hover:text-snippt-ink'
+                  }`}
+                  style={
+                    isSelected
+                      ? { boxShadow: '0 0 0 1px rgba(84,104,255,.4), 0 0 14px -4px rgba(84,104,255,.6)' }
+                      : undefined
+                  }
+                >
+                  {slot}
+                </button>
+              )
+            })}
+          </div>
+        )}
 
-                  return (
-                    <td key={tag.datum} className="px-0.5 py-0.5">
-                      {nichtBuchbar ? (
-                        <span className="flex h-5 w-full items-center justify-center">
-                          {istBelegt ? (
-                            <span className="h-1.5 w-1.5 rounded-full bg-coal/25" />
-                          ) : (
-                            <span className="h-px w-3 bg-bone/8" />
-                          )}
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          className="h-5 w-full rounded bg-gold/10 text-[9px] font-medium text-gold/70 transition-colors hover:bg-gold/25 hover:text-gold"
-                        >
-                          frei
-                        </button>
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Legende */}
-      <div className="flex items-center gap-4 border-t border-bone/8 px-4 py-2.5">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded bg-gold/20" />
-          <span className="text-[10px] text-coal/40">Frei</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-coal/25" />
-          <span className="text-[10px] text-coal/40">Belegt</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="h-px w-4 bg-bone/8" />
-          <span className="text-[10px] text-coal/40">Vorbei</span>
+        {/* Legende */}
+        <div className="mt-3 flex items-center gap-4 border-t border-white/[0.06] pt-3">
+          <div className="flex items-center gap-1.5">
+            <span className="h-[10px] w-[10px] rounded-[3px] border border-white/10 bg-white/[0.03]" />
+            <span className="text-[10px] text-snippt-faint">Belegt</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-[10px] w-[10px] rounded-[3px] border border-white/[0.10] bg-white/[0.03]" />
+            <span className="text-[10px] text-snippt-faint">Frei</span>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

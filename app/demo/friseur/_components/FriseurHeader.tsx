@@ -1,74 +1,54 @@
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import type { Friseur } from '@/lib/mockData'
 
 /**
- * FriseurHeader — Begrüßung + Datum + Tages-Chips.
- *
- * Begrüßungs-H1 in Playfair Display Serif.
+ * FriseurHeader — Begrüßung, Datum und Live-Reihen-Statistik.
+ * Dark/Glow-Design (SG2-Palette). Kein Friseur-Typ-Import — hardcodete Mock-Props.
  * Server Component.
  */
 export function FriseurHeader({
-  friseur,
+  name,
   datumLang,
-  anzahlErledigt,
-  anzahlWalkIn,
-  anzahlGesamt,
+  anzahlInReihe,
+  anzahlFertig,
 }: {
-  friseur: Friseur
+  name: string
   datumLang: string
-  anzahlErledigt: number
-  anzahlWalkIn: number
-  anzahlGesamt: number
+  anzahlInReihe: number
+  anzahlFertig: number
 }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* Zurück-Link */}
       <Link
         href="/demo"
-        className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-coal/50 transition-colors hover:text-ink"
+        className="inline-flex items-center gap-[6px] text-[11px] font-medium uppercase tracking-[0.16em] text-snippt-faint transition-colors hover:text-snippt-muted"
       >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        Zurück zum Hub
+        <ArrowLeft className="h-3 w-3" />
+        Demo-Übersicht
       </Link>
 
-      <header className="flex items-center justify-between border-b border-bone/10 pb-6">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-3 label-caps text-gold">
-            <span className="h-px w-6 bg-gold" />
-            Friseur · Tagesansicht
-          </div>
-          <h1 className="text-h1 text-ink">
-            Hallo, {friseur.name.split(' ')[0]}
-          </h1>
-          <p className="text-sm text-coal/65">{datumLang}</p>
-        </div>
+      {/* Kontext-Label */}
+      <div className="text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
+        Friseur · Live-Reihe
+      </div>
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={friseur.foto}
-          alt={friseur.name}
-          className="h-12 w-12 flex-shrink-0 rounded-full border border-bone/15 object-cover"
-        />
-      </header>
+      {/* Begrüßung */}
+      <div className="space-y-[6px]">
+        <h1 className="font-display text-[28px] font-semibold leading-tight tracking-tight text-snippt-ink">
+          Hallo {name.split(' ')[0]}
+        </h1>
+        <p className="text-[14px] text-snippt-muted">{datumLang}</p>
+      </div>
 
-      {/* Tages-Chips */}
-      <div className="flex flex-wrap gap-2">
-        <Chip label={`${anzahlErledigt} erledigt`} />
-        {anzahlWalkIn > 0 && <Chip label={`${anzahlWalkIn} Walk-In`} gold />}
-        <Chip label={`${anzahlGesamt} heute gesamt`} />
+      {/* Stat-Zeile */}
+      <div className="flex items-center gap-[6px] text-[13px] text-snippt-muted">
+        <span className="font-semibold text-snippt-ink">{anzahlInReihe}</span>
+        <span>in der Reihe</span>
+        <span className="px-[2px] text-snippt-faint">·</span>
+        <span className="font-semibold text-snippt-ink">{anzahlFertig}</span>
+        <span>heute fertig</span>
       </div>
     </div>
-  )
-}
-
-function Chip({ label, gold = false }: { label: string; gold?: boolean }) {
-  return (
-    <span
-      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
-        gold ? 'bg-gold/15 text-gold' : 'bg-bone/8 text-coal/70'
-      }`}
-    >
-      {label}
-    </span>
   )
 }

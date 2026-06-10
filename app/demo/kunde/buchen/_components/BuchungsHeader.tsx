@@ -1,53 +1,57 @@
 import Link from 'next/link'
-import { ArrowLeft, Star } from 'lucide-react'
-import type { Friseur } from '@/lib/mockData'
+import { ArrowLeft } from 'lucide-react'
 
 /**
- * BuchungsHeader — Friseur-Profil-Zeile oben auf dem Buchungsscreen.
- * Gibt dem Kunden sofort das Gefühl: „Ich buche bei meinem Friseur."
- * Server Component.
+ * BuchungsHeader — Marco's Profil-Zeile im Termin-Modus.
+ * Dark/Glow-Design. Rein presentational, keine Props nötig.
  */
-export function BuchungsHeader({ friseur }: { friseur: Friseur }) {
+export function BuchungsHeader() {
   return (
     <div className="space-y-6">
+      {/* Zurück-Link */}
       <Link
-        href="/demo/kunde/profil"
-        className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-coal/50 transition-colors hover:text-ink"
+        href="/demo"
+        className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-snippt-faint transition-colors hover:text-snippt-muted"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        Zurück zum Profil
+        Demo-Übersicht
       </Link>
 
-      <header className="border-b border-bone/10 pb-6">
-        <div className="flex items-center gap-3 label-caps text-gold mb-3">
-          <span className="h-px w-6 bg-gold" />
-          Endkunde · Termin buchen
+      {/* Friseur-Profil-Zeile */}
+      <div className="flex items-center gap-4">
+        {/* Avatar — Gradient-Tile mit Initial */}
+        <div
+          className="grid h-[72px] w-[72px] flex-none place-items-center rounded-[22px] font-display text-[28px] font-semibold text-snippt-ink"
+          style={{
+            background: 'linear-gradient(135deg,#2a2a40,#15151f)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,.12), 0 0 28px -6px #5468FF',
+          }}
+        >
+          M
         </div>
 
-        <div className="flex items-center gap-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={friseur.foto}
-            alt={friseur.name}
-            className="h-14 w-14 flex-shrink-0 rounded-xl border border-bone/10 object-cover"
-          />
-          <div className="space-y-1">
-            <h1 className="text-h2 text-ink">{friseur.name}</h1>
-            <p className="text-sm text-coal/65">{friseur.spezialitaet}</p>
-            {friseur.social_proof.bewertung_durchschnitt != null && (
-              <div className="flex items-center gap-1.5">
-                <Star className="h-3 w-3 fill-gold text-gold" strokeWidth={0} />
-                <span className="text-xs font-semibold tabular-nums text-ink">
-                  {friseur.social_proof.bewertung_durchschnitt}
-                </span>
-                <span className="text-xs text-coal/40">
-                  · {friseur.social_proof.bewertung_anzahl} Bewertungen
-                </span>
-              </div>
-            )}
-          </div>
+        <div>
+          {/* Label-Caps Zeile */}
+          <span className="text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
+            Termin buchen
+          </span>
+          <h1 className="mt-[3px] font-display text-[21px] font-semibold tracking-tight text-snippt-ink">
+            Marco Ferretti
+          </h1>
+          <p className="text-[13px] text-snippt-muted">Fade · Skin Fade · Bart</p>
         </div>
-      </header>
+      </div>
+
+      {/* Hinweis-Zeile: Termin-Modus */}
+      <div
+        className="rounded-[14px] border border-snippt-glow1/20 px-4 py-[11px]"
+        style={{ background: 'rgba(84,104,255,.06)' }}
+      >
+        <p className="text-[13px] text-snippt-muted">
+          <span className="font-medium text-snippt-ink">Marco arbeitet mit festen Terminen.</span>
+          {' '}Wähle einen freien Slot — die Zeit gehört dann nur dir.
+        </p>
+      </div>
     </div>
   )
 }

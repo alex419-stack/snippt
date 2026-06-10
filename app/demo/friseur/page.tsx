@@ -1,99 +1,99 @@
-import {
-  getFriseurById,
-  getKundeById,
-  getTermineByFriseur,
-} from '@/lib/mockData'
 import { FriseurHeader } from './_components/FriseurHeader'
 import { MeinBrandKarte } from './_components/MeinBrandKarte'
-import { type TerminEintrag } from './_components/TagesTermine'
-import { TagesZeitslots } from './_components/TagesZeitslots'
-import { WochenRaster } from './_components/WochenRaster'
+import { DemoReihe } from './_components/DemoReihe'
 
 /**
- * Friseur-Tagesansicht — M0 Killer-Screen #2.
+ * Friseur-Demo — Live-Reihe (Tagesansicht).
  *
- * Zeigt Marcos persönlichen Arbeitstag aus seiner Sicht auf dem Handy:
- * Begrüßung, „Mein Brand"-Karte (Personalbranding) und chronologische
- * Termin-Timeline mit JETZT-Linie und Kundennotizen.
+ * Post-Pivot (2026-06-09): Ein Friseur „Marco", keine fixen Uhrzeiten —
+ * nur Positionen und Statuses (ist da / unterwegs / wartet).
+ * Digitale Stempelkarte als Akzent.
  *
- * Mobile-First: max-w-[430px] simuliert Phone-Viewport.
- * Server Component. Alle Daten aus lib/mockData.ts, keine API-Calls.
+ * Statisch/presentational — kein Backend, keine Server Actions.
+ * Mobile-First: max-w-md zentriert, simuliert Phone-Viewport.
  */
 
-// ---------- Demo-Konstanten ----------
+// ── Mock-Daten ──────────────────────────────────────────────────────────────
 
-const MARCO_ID = 'f1'
-const HEUTE_DATUM = '2026-05-01'
-const HEUTE_LANG = 'Freitag, 1. Mai 2026'
-/** Fiktives "Jetzt" — liegt zwischen letztem Done-Termin (11:30) und nächstem (14:00). */
-const JETZT_UHRZEIT = '13:30'
+const MARCO = {
+  name: 'Marco Ferretti',
+  foto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face',
+  spezialitaet: 'Fade · Skin Fade · Bart',
+  bio: 'Ich schneide seit 11 Jahren. Jeder Kopf ist anders — ich nehme mir die Zeit, die es braucht. Keine Fließband-Schnitte.',
+  jahreDerErfahrung: 11,
+  bewertung: 4.9,
+  bewertungAnzahl: 134,
+  stammkundenProzent: 78,
+  stilTags: ['Fade', 'Skin Fade', 'Textured Crop', 'Bart', 'Klassisch'],
+  socialProofSatz:
+    'Seit drei Jahren gehe ich nur noch zu Marco. Er kennt meinen Kopf besser als ich.',
+}
 
-// ---------- Page ----------
+const REIHE_HEUTE = [
+  {
+    id: '1',
+    name: 'Kenan Y.',
+    status: 'da' as const,
+    wartetSeit: '4 Min',
+    stempelVoll: true,
+  },
+  {
+    id: '2',
+    name: 'Mert K.',
+    status: 'unterwegs' as const,
+    wartetSeit: '12 Min',
+  },
+  {
+    id: '3',
+    name: 'Deniz A.',
+    status: 'unterwegs' as const,
+    wartetSeit: '23 Min',
+  },
+  {
+    id: '4',
+    name: 'Jonas B.',
+    status: 'wartet' as const,
+    wartetSeit: '31 Min',
+  },
+]
 
-export default function FriseurPage() {
-  const marco = getFriseurById(MARCO_ID)!
+const DATUM_LANG = 'Mittwoch, 10. Juni 2026'
+const ANZAHL_FERTIG = 6 // Mock: heute bereits abgeschlossen
 
-  // Marcos Termine heute, chronologisch sortiert
-  const termineHeute = getTermineByFriseur(MARCO_ID)
-    .filter((t) => t.start.startsWith(HEUTE_DATUM))
-    .sort((a, b) => a.start.localeCompare(b.start))
+// ── Page ────────────────────────────────────────────────────────────────────
 
-  // Erster geplanter Termin = der nächste
-  const naechsterTerminId = termineHeute.find((t) => t.status === 'geplant')?.id
-
-  // TerminEinträge mit aufgelöstem Kunden-Objekt
-  const eintraege: TerminEintrag[] = termineHeute
-    .map((termin) => {
-      const kunde = getKundeById(termin.kunde_id)
-      if (!kunde) return null
-      return { termin, kunde, istNaechster: termin.id === naechsterTerminId }
-    })
-    .filter((e): e is TerminEintrag => e !== null)
-
-  // Tages-KPIs für den Header
-  const anzahlErledigt = termineHeute.filter(
-    (t) => t.status === 'abgeschlossen',
-  ).length
-  const anzahlWalkIn = termineHeute.filter(
-    (t) => t.status === 'walkin',
-  ).length
-  const anzahlGesamt = termineHeute.length
-
+export default function FriseurDemoPage() {
   return (
-    <div className="relative">
-    <div className="mx-auto max-w-[430px] space-y-8">
-      <FriseurHeader
-        friseur={marco}
-        datumLang={HEUTE_LANG}
-        anzahlErledigt={anzahlErledigt}
-        anzahlWalkIn={anzahlWalkIn}
-        anzahlGesamt={anzahlGesamt}
+    <main className="relative min-h-screen overflow-x-hidden">
+      {/* Hintergrund-Glow — Indigo links oben, Cyan rechts oben */}
+      <div
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(60% 50% at 0% 0%, rgba(84,104,255,.18), transparent 70%), ' +
+            'radial-gradient(50% 40% at 100% 0%, rgba(43,231,255,.12), transparent 65%), ' +
+            '#08080B',
+        }}
       />
 
-      <MeinBrandKarte friseur={marco} />
+      {/* Inhalt */}
+      <div className="relative z-[1] mx-auto w-full max-w-md px-5 pb-12 pt-12 space-y-8">
+        <FriseurHeader
+          name={MARCO.name}
+          datumLang={DATUM_LANG}
+          anzahlInReihe={REIHE_HEUTE.length}
+          anzahlFertig={ANZAHL_FERTIG}
+        />
 
-      <TagesZeitslots eintraege={eintraege} jetztUhrzeit={JETZT_UHRZEIT} />
+        <MeinBrandKarte daten={MARCO} />
 
-      <WochenRaster
-        termine={getTermineByFriseur(MARCO_ID)}
-        heuteDatum={HEUTE_DATUM}
-      />
+        <DemoReihe eintraege={REIHE_HEUTE} />
 
-      <footer className="border-t border-coal/10 pt-6 text-xs text-coal/45">
-        Mockup mit Demo-Daten aus{' '}
-        <code className="rounded bg-coal/5 px-1.5 py-0.5 font-mono text-[11px] text-coal/70">
-          lib/mockData.ts
-        </code>{' '}
-        — keine API, keine Logik außer Aggregation.
-      </footer>
-    </div>
-
-    {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img
-      src="/barber-hero-clean.png"
-      alt="Snippt Barbershop"
-      className="absolute right-2 top-2 w-16 xl:right-8 xl:top-8 xl:w-[260px]"
-    />
-    </div>
+        {/* Footer-Hinweis */}
+        <p className="text-center text-[11px] text-snippt-faint">
+          Demo-Ansicht · Keine Echtdaten
+        </p>
+      </div>
+    </main>
   )
 }

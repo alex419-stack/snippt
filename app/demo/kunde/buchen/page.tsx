@@ -1,65 +1,57 @@
-import { getFriseurById, getTermineByFriseur } from '@/lib/mockData'
 import { BuchungsHeader } from './_components/BuchungsHeader'
 import { SchnellSlots } from './_components/SchnellSlots'
 import { BuchungsKalender } from './_components/BuchungsKalender'
 import { ConversionTeaser } from './_components/ConversionTeaser'
 
 /**
- * Buchungs-Flow — M0 Killer-Screen #4.
+ * Termin-Buchungsscreen — Marco Ferretti (Termin-Modus).
  *
- * Endkunde bucht bei seinem Friseur (Marco):
- * 1. Schnell-Slots: Nächste freie Slots auf einen Blick
- * 2. Wochenkalender: Frei- und Belegtanzeige über zwei Wochen
- * 3. Conversion-Teaser: Stammkunde werden
- *
- * Mobile-First: max-w-[430px].
- * Server Component. Daten aus lib/mockData.ts.
+ * Demo-Screen: Ein Friseur, keine API, keine Server Actions.
+ * Layout (bg-snippt-bg, font-body, snippt-grain) kommt vom Eltern-Layout.
+ * Interaktive Elemente (Slot-Auswahl, Tag-Picker) sind Client Components.
  */
-
-const STAMMFRISEUR_ID  = 'f1'  // Marco
-const HEUTE_DATUM      = '2026-05-01'
-
-// ---------- Schnell-Slots ----------
-// Heute (Fr 01.05.) sind alle Nachmittagsslots bei Marco belegt (t33, t35, t38, t40).
-// → Nächste freie Slots aus Sa 02.05. (Lücken zwischen t42/t43 um 9h und t48 um 14:30)
-const SCHNELL_SLOTS = [
-  { datum: 'Sa, 2. Mai', uhrzeit: '10:00' },
-  { datum: 'Sa, 2. Mai', uhrzeit: '10:30' },
-  { datum: 'Sa, 2. Mai', uhrzeit: '11:00' },
-  { datum: 'Sa, 2. Mai', uhrzeit: '11:30' },
-]
-
 export default function BuchenPage() {
-  const marco = getFriseurById(STAMMFRISEUR_ID)!
-  const marcoTermine = getTermineByFriseur(STAMMFRISEUR_ID)
-  const vorname = marco.name.split(' ')[0]
-
   return (
-    <div className="relative">
-    <div className="mx-auto max-w-[430px] space-y-6">
-      <BuchungsHeader friseur={marco} />
+    <>
+      {/* Hintergrund-Glow — indigo links oben, cyan rechts */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background:
+            'radial-gradient(60% 45% at 18% 4%, rgba(84,104,255,.20), transparent 60%),' +
+            'radial-gradient(50% 40% at 88% 16%, rgba(43,231,255,.13), transparent 60%),' +
+            'linear-gradient(180deg,#08080B,#0C0C12)',
+        }}
+      />
 
-      <SchnellSlots slots={SCHNELL_SLOTS} friseurVorname={vorname} />
+      {/* Seiteninhalt */}
+      <div className="relative z-[1] mx-auto w-full max-w-md px-5 pb-12 pt-12">
+        <div className="space-y-8">
+          {/* Friseur-Header + Hinweis-Banner */}
+          <BuchungsHeader />
 
-      <BuchungsKalender termine={marcoTermine} heuteDatum={HEUTE_DATUM} />
+          {/* Schnell-Slots: nächste freie Termine als Chips */}
+          <SchnellSlots />
 
-      <ConversionTeaser friseurVorname={vorname} />
+          {/* Kalender: Tag wählen + Uhrzeit wählen */}
+          <BuchungsKalender />
 
-      <footer className="border-t border-coal/10 pt-6 text-xs text-coal/45">
-        Mockup mit Demo-Daten aus{' '}
-        <code className="rounded bg-coal/5 px-1.5 py-0.5 font-mono text-[11px] text-coal/70">
-          lib/mockData.ts
-        </code>{' '}
-        — keine API, keine Logik außer Aggregation.
-      </footer>
-    </div>
+          {/* Stammkunden-Teaser */}
+          <ConversionTeaser />
 
-    {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img
-      src="/barber-hero-clean.png"
-      alt="Snippt Barbershop"
-      className="absolute right-2 top-2 w-16 xl:right-8 xl:top-8 xl:w-[260px]"
-    />
-    </div>
+          {/* Primäre CTA — Gradient-Button */}
+          <button
+            type="button"
+            className="w-full rounded-[16px] py-[17px] text-[16px] font-semibold text-[#070710] transition-opacity hover:opacity-90"
+            style={{
+              background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
+              boxShadow: '0 12px 34px -10px rgba(84,104,255,.8), inset 0 0 0 1px rgba(255,255,255,.12)',
+            }}
+          >
+            Termin bestätigen
+          </button>
+        </div>
+      </div>
+    </>
   )
 }

@@ -1,13 +1,22 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
-import { meinSalon } from '@/lib/mockData'
 
-/**
- * /demo Hub
- *
- * Einstiegs-Karte für den Pitch: 4 Sichten, je eine Kachel.
- * "Snippt" als Display-Headline in Playfair Display Serif.
- */
+// Demo-Hub im Snippt-v1-Design: dunkel, leuchtend (Indigo/Cyan).
+// Zeigt 4 Perspektiven nach dem Pivot auf den einzelnen Friseur "Marco".
+// Statischer Pitch-Screen — kein Backend, keine Server Actions.
+
+// Atmosphärisches Hintergrundglühen — identisch zur Landing Page.
+const glow = (
+  <div
+    className="pointer-events-none fixed inset-0 z-0"
+    style={{
+      background:
+        'radial-gradient(60% 45% at 18% 4%, rgba(84,104,255,.20), transparent 60%),' +
+        'radial-gradient(50% 40% at 88% 16%, rgba(43,231,255,.13), transparent 60%),' +
+        'linear-gradient(180deg,#08080B,#0C0C12)',
+    }}
+  />
+)
 
 type DemoTile = {
   href: string
@@ -16,120 +25,120 @@ type DemoTile = {
   beschreibung: string
 }
 
+// Genau 4 Kacheln nach Pivot — Salonchef-Tile entfernt.
 const tiles: DemoTile[] = [
   {
-    href: '/demo/salonchef',
-    titel: 'Salonchef-Dashboard',
-    akteur: 'Salonbesitzer · Desktop',
-    beschreibung:
-      'Auslastung pro Friseur, Stammkundenanteil und Walk-In-Pattern auf einen Blick — die Steuerzentrale für den Salon.',
-  },
-  {
     href: '/demo/friseur',
-    titel: 'Friseur-Tagesansicht',
+    titel: 'Live-Reihe',
     akteur: 'Friseur · Mobile',
     beschreibung:
-      'Eigener Tag, nächster Stammkunde mit Foto und Notiz. Kein Salon-Sammelsurium, sondern persönliche Sicht.',
+      'Wer ist dran, wer wartet — ein Tap für fertig → nächster. Kein Notizbuch, keine Anrufe.',
   },
   {
     href: '/demo/kunde/profil',
-    titel: 'Friseur-Profil',
-    akteur: 'Endkunde · QR-Code-Einstieg · Mobile',
+    titel: 'Dein Friseur',
+    akteur: 'Kunde · Mobile',
     beschreibung:
-      'Kunde scannt QR-Code nach dem Schnitt — landet beim Profil seines Friseurs, bucht den nächsten Termin, legt ein Konto an. Der Moment, in dem Laufkundschaft zu Stammkundschaft wird.',
+      'Profil + digitale Stempelkarte. Der Moment, in dem aus Laufkundschaft Stammkundschaft wird.',
   },
   {
     href: '/demo/kunde/walkin',
-    titel: 'Walk-In Live-Status',
-    akteur: 'Endkunde · Mobile',
+    titel: 'In der Reihe',
+    akteur: 'Kunde · Mobile',
     beschreibung:
-      'Ist mein Friseur gerade frei? Live-Status pro Stuhl plus Express-Buchung in einem Tap.',
+      'Ist mein Friseur frei? Stell dich mit einem Tap an und sieh deine Position live.',
   },
   {
     href: '/demo/kunde/buchen',
     titel: 'Termin buchen',
-    akteur: 'Endkunde · Mobile',
+    akteur: 'Kunde · Mobile',
     beschreibung:
-      'Lieblings-Friseur vorausgewählt, Slot wählen, bestätigen — drei Taps statt Anruf in der Mittagspause.',
+      'Für Friseure im Termin-Modus: Slot wählen, bestätigen — ohne Anruf.',
   },
 ]
 
 export default function DemoHubPage() {
   return (
-    <div className="space-y-16">
-      {/* Header / Wortmarke */}
-      <header className="relative overflow-hidden">
+    <>
+      {glow}
 
-        {/* Text-Content — auf Desktop Platz rechts für das Bild */}
-        <div className="space-y-6 md:pr-[44%]">
+      <div className="relative z-[1] space-y-14">
 
-          {/* Barber-Stripe — Rot / Weiß / Blau */}
-          <div className="flex h-[3px] w-24 overflow-hidden rounded-full">
-            <div className="flex-1 bg-[#C8201E]" />
-            <div className="flex-1 bg-bone/25" />
-            <div className="flex-1 bg-[#1A3A8F]" />
-          </div>
+        {/* ── Hero ───────────────────────────────────────────── */}
+        <header className="space-y-5 text-center">
 
-          <div className="flex items-center gap-3 label-caps text-gold">
-            <span className="h-px w-8 bg-gold" />
-            Hi-Fi Mockup · M0
-          </div>
+          {/* Eyebrow mit Puls-Punkt */}
+          <span className="inline-flex items-center gap-[7px] text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
+            <span
+              className="snippt-pulse h-[7px] w-[7px] rounded-full bg-snippt-glow2"
+              style={{ boxShadow: '0 0 10px rgba(43,231,255,.8)' }}
+            />
+            Live-Demo
+          </span>
 
-          {/* Wordmark */}
-          <h1 className="text-display text-ink">Snippt</h1>
+          {/* Wortmarke */}
+          <h1 className="font-display text-[52px] font-semibold leading-none tracking-tight md:text-[72px]">
+            Snippt
+          </h1>
 
-          <p className="text-lg leading-relaxed text-coal/75 md:text-xl">
-            Premium-Buchung für{' '}
-            <span className="font-medium text-ink">{meinSalon.name}</span>.
-            Stammkunden landen verlässlich bei ihrem Friseur — Walk-In und
-            Vorab-Buchung gleichberechtigt.
+          {/* Tagline */}
+          <p className="mx-auto max-w-[42ch] text-[15px] leading-relaxed text-snippt-muted md:text-[17px]">
+            Eine Live-Reihe pro Friseur — ohne Uhrzeiten.
+            Stammkunden bleiben bei ihrem Friseur, aus Laufkundschaft
+            wird Stammkundschaft.
           </p>
-        </div>
+        </header>
 
-        {/* Barbershop Hero-Grafik — rechts, transparenter Hintergrund */}
-        <img
-          src="/barber-hero-clean.png"
-          alt="Snippt Barbershop"
-          className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[42%]"
-        />
-      </header>
+        {/* ── 4 Demo-Kacheln ─────────────────────────────────── */}
+        <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {tiles.map((t) => (
+            <Link
+              key={t.href}
+              href={t.href}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-snippt-surface p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/[0.14] hover:shadow-[0_12px_40px_-12px_rgba(84,104,255,.18)]"
+            >
+              <div className="space-y-4">
+                {/* Akteur-Label */}
+                <div className="text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
+                  {t.akteur}
+                </div>
 
-      {/* 4 Demo-Kacheln */}
-      <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        {tiles.map((t) => (
-          <Link
-            key={t.href}
-            href={t.href}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-bone/10 bg-surface p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-bone/20 hover:shadow-[0_8px_28px_-8px_rgba(0,0,0,0.09)]"
-          >
-            <div className="space-y-4">
-              <div className="label-caps text-gold">
-                {t.akteur}
+                {/* Kachel-Titel */}
+                <h2 className="font-display text-[22px] font-semibold leading-tight tracking-tight text-snippt-ink md:text-[24px]">
+                  {t.titel}
+                </h2>
+
+                {/* Beschreibung */}
+                <p className="text-[14px] leading-relaxed text-snippt-muted">
+                  {t.beschreibung}
+                </p>
               </div>
-              <h2 className="text-h2 text-ink">
-                {t.titel}
-              </h2>
-              <p className="text-sm leading-relaxed text-coal/70">
-                {t.beschreibung}
-              </p>
-            </div>
-            <div className="mt-8 flex items-center justify-between">
-              <span className="text-xs font-medium uppercase tracking-[0.16em] text-coal/50">
-                Ansehen
-              </span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-background transition-transform duration-200 group-hover:rotate-45">
-                <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
-              </span>
-            </div>
-          </Link>
-        ))}
-      </section>
 
-      {/* Footer-Notiz */}
-      <footer className="border-t border-bone/10 pt-6 text-xs text-coal/50">
-        Mockup mit Demo-Daten — keine echten Termine, keine Anbindung an
-        Backend.
-      </footer>
-    </div>
+              {/* Fußzeile mit Pfeil-Button */}
+              <div className="mt-8 flex items-center justify-between">
+                <span className="text-[11px] uppercase tracking-[0.16em] text-snippt-faint">
+                  Ansehen
+                </span>
+                {/* Gradient-Kreis mit ArrowUpRight */}
+                <span
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-transform duration-200 group-hover:rotate-45"
+                  style={{
+                    background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
+                    color: '#070710',
+                  }}
+                >
+                  <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </section>
+
+        {/* ── Footer-Hinweis ─────────────────────────────────── */}
+        <footer className="border-t border-white/[0.07] pt-6 text-[12px] text-snippt-faint">
+          Mockup mit Demo-Daten — keine echten Termine.
+        </footer>
+      </div>
+    </>
   )
 }

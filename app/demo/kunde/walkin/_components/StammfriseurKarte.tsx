@@ -1,110 +1,107 @@
-import Link from 'next/link'
-import { Star, MapPin } from 'lucide-react'
-import type { Friseur } from '@/lib/mockData'
-
 /**
- * StammfriseurKarte — Prominente Highlight-Karte für "Deinen Friseur".
+ * StammfriseurKarte — Hero-Karte für Marco's Live-Warteschlangen-Status.
  *
- * Zeigt Personalbranding (Foto, Name, Spezialität, Bewertung) und
- * den aktuellen Verfügbarkeitsstatus mit 2 CTAs.
+ * Zeigt: Anzahl Wartender, Statuszeile, CTA "Jetzt anstellen".
+ * Nach dem Anstellen: Positionsanzeige "Du bist #3 · 2 vor dir".
  *
- * Steht above the fold — der Kunde sieht dies sofort ohne zu scrollen.
- * Server Component.
+ * Snippt-v1-Design (dunkel, Glow-Palette). Server Component.
  */
-export type FriseurStatus =
-  | { typ: 'frei'; naechsterTermin: string }
-  | { typ: 'besetzt'; freiAb: string }
+
+export type WarteschlangenStatus =
+  | { typ: 'offen'; wartend: number }
+  | { typ: 'angestellt'; position: number; vorDir: number }
 
 export function StammfriseurKarte({
-  friseur,
   status,
 }: {
-  friseur: Friseur
-  status: FriseurStatus
+  status: WarteschlangenStatus
 }) {
+  const istAngestellt = status.typ === 'angestellt'
+
   return (
-    <section className="space-y-3">
-      <div className="flex items-center gap-3 label-caps text-gold">
-        <MapPin className="h-3 w-3 fill-gold text-gold" strokeWidth={0} />
-        Dein Friseur
-      </div>
+    <section>
+      <article
+        className="rounded-2xl p-5 space-y-5"
+        style={{
+          background: 'radial-gradient(140% 100% at 50% 0%, rgba(43,231,255,.09) 0%, rgba(84,104,255,.07) 40%, transparent 70%), #141420',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(255,255,255,.07)',
+        }}
+      >
+        {/* Status-Block */}
+        {istAngestellt ? (
+          /* ── Angestellt: Positions-Anzeige ── */
+          <div className="text-center space-y-3 py-2">
+            <div className="text-[11px] uppercase tracking-[0.16em] text-snippt-glow2 mb-1">
+              Du stehst in der Reihe
+            </div>
 
-      <article className="space-y-5 rounded-2xl border border-bone/10 bg-surface p-5">
-        {/* Profil-Zeile */}
-        <div className="flex items-start gap-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={friseur.foto}
-            alt={friseur.name}
-            className="h-16 w-16 flex-shrink-0 rounded-xl border border-bone/10 object-cover"
-          />
-          <div className="min-w-0 space-y-1">
-            <h2 className="text-h2 leading-tight text-ink">{friseur.name}</h2>
-            <p className="text-sm text-coal/65">{friseur.spezialitaet}</p>
-            {friseur.social_proof.bewertung_durchschnitt != null && (
-              <div className="flex items-center gap-1.5 pt-0.5">
-                <Star
-                  className="h-3.5 w-3.5 flex-shrink-0 fill-gold text-gold"
-                  strokeWidth={0}
-                />
-                <span className="text-sm font-semibold tabular-nums text-ink">
-                  {friseur.social_proof.bewertung_durchschnitt}
-                </span>
-                <span className="text-xs text-coal/45">
-                  · {friseur.jahre_erfahrung} J. Erfahrung
-                </span>
-              </div>
-            )}
+            {/* Große Positionszahl */}
+            <div
+              className="font-display text-[72px] font-semibold leading-none tabular-nums"
+              style={{
+                background: 'linear-gradient(160deg,#2BE7FF,#5468FF)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}
+            >
+              #{(status as { typ: 'angestellt'; position: number; vorDir: number }).position}
+            </div>
+
+            {/* Beschreibungszeile */}
+            <p className="text-[15px] font-medium text-snippt-ink">
+              {(status as { typ: 'angestellt'; position: number; vorDir: number }).vorDir === 1
+                ? '1 Person vor dir'
+                : `${(status as { typ: 'angestellt'; position: number; vorDir: number }).vorDir} Personen vor dir`}
+            </p>
+            <p className="text-[12px] text-snippt-muted">
+              Wir sagen dir Bescheid, wenn du fast dran bist.
+            </p>
           </div>
-        </div>
+        ) : (
+          /* ── Noch nicht angestellt: Warten-Zahl + CTA ── */
+          <div className="space-y-4">
+            {/* Wartende */}
+            <div className="flex items-end gap-3">
+              <span
+                className="font-display text-[56px] font-semibold leading-none tabular-nums"
+                style={{
+                  background: 'linear-gradient(160deg,#2BE7FF,#5468FF)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
+                {(status as { typ: 'offen'; wartend: number }).wartend}
+              </span>
+              <div className="pb-2 space-y-0.5">
+                <p className="text-[15px] font-semibold text-snippt-ink leading-tight">
+                  warten gerade
+                </p>
+                <p className="text-[12px] text-snippt-muted">
+                  frei in ca.{' '}
+                  {(status as { typ: 'offen'; wartend: number }).wartend} Schnitten
+                </p>
+              </div>
+            </div>
 
-        <div className="border-t border-bone/10" />
+            {/* Trennlinie */}
+            <div className="border-t border-white/[0.06]" />
 
-        {/* Status */}
-        <div className="space-y-1.5">
-          <StatusPill status={status} />
-          <p className="text-xs text-coal/50">
-            {status.typ === 'frei'
-              ? `Nächster Termin: ${status.naechsterTermin} Uhr`
-              : `Nächster freier Slot: ${status.freiAb} Uhr`}
-          </p>
-        </div>
-
-        {/* CTAs */}
-        <div className="flex flex-col gap-2.5">
-          <Link
-            href="/demo/kunde/buchen"
-            className="flex w-full items-center justify-center rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80"
-          >
-            {status.typ === 'frei'
-              ? 'Slot sichern'
-              : `Slot um ${status.freiAb} Uhr sichern`}
-          </Link>
-          <button
-            type="button"
-            className="flex w-full items-center justify-center rounded-xl border border-bone/15 px-4 py-3 text-sm font-medium text-coal/70 transition-colors hover:border-bone/30 hover:text-coal/90"
-          >
-            {status.typ === 'frei' ? 'Einfach hingehen' : 'Anderen Friseur wählen'}
-          </button>
-        </div>
+            {/* CTA */}
+            <button
+              type="button"
+              className="flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-[15px] font-semibold transition-opacity hover:opacity-85"
+              style={{
+                background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
+                color: '#070710',
+              }}
+            >
+              Jetzt anstellen
+            </button>
+          </div>
+        )}
       </article>
     </section>
-  )
-}
-
-function StatusPill({ status }: { status: FriseurStatus }) {
-  if (status.typ === 'frei') {
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1 text-xs font-medium text-gold">
-        <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-        Gerade frei
-      </span>
-    )
-  }
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-coal/10 px-3 py-1 text-xs font-medium text-coal/60">
-      <span className="h-1.5 w-1.5 rounded-full bg-coal/40" />
-      Besetzt bis {status.freiAb} Uhr
-    </span>
   )
 }

@@ -1,123 +1,198 @@
-import { friseure, termine, getFriseurById } from '@/lib/mockData'
 import { WalkInHeader } from './_components/WalkInHeader'
-import { StammfriseurKarte, type FriseurStatus } from './_components/StammfriseurKarte'
-import { AuslastungsBlock } from './_components/AuslastungsBlock'
-import { FriseurZeile } from './_components/FriseurZeile'
+import { StammfriseurKarte } from './_components/StammfriseurKarte'
 import { ConversionTeaser } from './_components/ConversionTeaser'
 
 /**
- * Walk-In Live-Status — M0 Killer-Screen #3.
+ * Walk-In Live-Status — Snippt-v1-Design (dunkel, Glow).
  *
- * Endkunde schaut von Zuhause: "Ist Marco frei? Soll ich hingehen?"
- * Leitprinzip: 3 Schritte, 1 Tap — Marco-Karte sofort sichtbar ohne Scrollen.
+ * Demo-State: Kunde ist bereits in der Reihe (#3, 2 vor ihm).
+ * So wird der Kern-Wert sofort sichtbar ohne Interaktion.
  *
- * Mobile-First: max-w-[430px].
- * Server Component. Alle Daten aus lib/mockData.ts.
+ * Mobile-First: max-w-md. Server Component.
+ * Keine Backend-Aufrufe, keine Server Actions.
  */
 
-// ---------- Demo-Konstanten ----------
+// ── Demo-Konstanten ──────────────────────────────────────────
 
-/** Stammfriseur des Demo-Kunden */
-const STAMMFRISEUR_ID = 'f1' // Marco Lehmann
+const FRISEUR_NAME = 'Marco'
+const HEUTE_LANG = 'Mittwoch, 10. Juni 2026'
 
-/** "Heute" für die Demo */
-const HEUTE_DATUM = '2026-05-01'
-const HEUTE_LANG  = 'Freitag, 1. Mai 2026'
+// ── Queue-Typen (Inline-Mockdaten) ───────────────────────────
 
-/** Fiktives "Jetzt" — 13:30, konsistent mit Friseur-Tagesansicht */
-const JETZT_ISO = '2026-05-01T13:30'
+type QueueStatus = 'da' | 'unterwegs' | 'wartet'
 
-// ---------- Hilfsfunktionen ----------
-
-/**
- * Gibt den ersten geplanten Termin eines Friseurs nach dem Jetzt-Zeitpunkt zurück.
- * Direkte ISO-String-Vergleiche vermeiden Zeitzonen-Effekte.
- */
-function naechsterGeplant(friseurId: string): string | null {
-  const kandidaten = termine
-    .filter(
-      (t) =>
-        t.friseur_id === friseurId &&
-        t.start.startsWith(HEUTE_DATUM) &&
-        t.status === 'geplant' &&
-        t.start > JETZT_ISO,
-    )
-    .sort((a, b) => a.start.localeCompare(b.start))
-
-  if (!kandidaten[0]) return null
-  return kandidaten[0].start.slice(11, 16)
+interface QueueEintrag {
+  id: string
+  name: string
+  status: QueueStatus
+  ichBin?: boolean
 }
 
-/**
- * Berechnet den FriseurStatus für die Stammfriseur-Karte.
- */
-function berechneFriseurStatus(friseurId: string): FriseurStatus {
-  const naechster = naechsterGeplant(friseurId)
-  if (naechster) {
-    return { typ: 'frei', naechsterTermin: naechster }
-  }
-  return { typ: 'frei', naechsterTermin: '19:00' }
+const QUEUE: QueueEintrag[] = [
+  { id: 'q1', name: 'Mert K.',  status: 'da' },
+  { id: 'q2', name: 'Deniz',    status: 'unterwegs' },
+  { id: 'q3', name: 'Du',       status: 'wartet', ichBin: true },
+  { id: 'q4', name: 'Yusuf',    status: 'wartet' },
+]
+
+const STATUS_META: Record<QueueStatus, { dot: string; label: string }> = {
+  da:        { dot: 'bg-snippt-da  shadow-[0_0_8px] shadow-snippt-da',  label: 'ist da' },
+  unterwegs: { dot: 'bg-snippt-weg shadow-[0_0_8px] shadow-snippt-weg', label: 'unterwegs' },
+  wartet:    { dot: 'bg-snippt-faint',                                   label: 'wartet' },
 }
 
-// ---------- Page ----------
+// ── Page ─────────────────────────────────────────────────────
 
 export default function WalkinPage() {
-  const marco = getFriseurById(STAMMFRISEUR_ID)!
-  const marcoStatus = berechneFriseurStatus(STAMMFRISEUR_ID)
+  // Demo: Kunde ist angestellt, Position 3, 2 vor ihm
+  const meinStatus = { typ: 'angestellt' as const, position: 3, vorDir: 2 }
 
-  const andereFriseure = friseure
-    .filter((f) => f.id !== STAMMFRISEUR_ID)
-    .map((f) => ({
-      friseur: f,
-      freiAb: naechsterGeplant(f.id) ?? '19:00',
-    }))
-
-  const anzahlGeplant = termine.filter(
-    (t) => t.start.startsWith(HEUTE_DATUM) && t.status === 'geplant',
-  ).length
-  const auslastungsstufe =
-    anzahlGeplant < 6 ? 'entspannt' : anzahlGeplant <= 12 ? 'maessig' : 'voll'
-
-  const KAPAZITAET_TAG = 3 * Math.floor((10 * 60) / 45)
-  const freieSlots = Math.max(0, KAPAZITAET_TAG - anzahlGeplant)
+  const [jetzt, ...wartend] = QUEUE
 
   return (
-    <div className="relative">
-    <div className="mx-auto max-w-[430px] space-y-6">
-      <WalkInHeader salonName="Mein Friseur" datumLang={HEUTE_LANG} />
-      <StammfriseurKarte friseur={marco} status={marcoStatus} />
+    <>
+      {/* Hintergrund-Glühen */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 50% at 30% -10%, rgba(84,104,255,.18), transparent 60%),' +
+            'radial-gradient(ellipse 60% 40% at 80% 110%, rgba(43,231,255,.12), transparent 55%)',
+        }}
+      />
 
-      <AuslastungsBlock stufe={auslastungsstufe} freieSlots={freieSlots} />
+      {/* Hauptinhalt */}
+      <div className="relative z-[1] mx-auto w-full max-w-md px-5 pb-12 pt-12">
+        <div className="space-y-6">
 
-      <section className="space-y-3">
-        <div className="flex items-center gap-3 label-caps text-coal/50">
-          <span className="h-px w-6 bg-coal/20" />
-          Andere Friseure heute
+          {/* ── Header ───────────────────────────────────────────── */}
+          <WalkInHeader friseurName={FRISEUR_NAME} datumLang={HEUTE_LANG} />
+
+          {/* ── Hero-Status-Karte ─────────────────────────────────── */}
+          <StammfriseurKarte status={meinStatus} />
+
+          {/* ── Live Queue Board ──────────────────────────────────── */}
+          <section className="space-y-3">
+            <div className="text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
+              Live-Reihe
+            </div>
+
+            <div
+              className="rounded-2xl p-4"
+              style={{
+                background: '#141420',
+                boxShadow:
+                  'inset 0 1px 0 rgba(255,255,255,.05), 0 0 0 1px rgba(255,255,255,.07)',
+              }}
+            >
+              <div className="relative flex flex-col gap-[10px] pl-[26px]">
+
+                {/* Leuchtende Spine */}
+                <div
+                  aria-hidden
+                  className="absolute left-[9px] top-[6px] bottom-[6px] w-[2px] rounded-full"
+                  style={{
+                    background: 'linear-gradient(180deg,#2BE7FF,#5468FF 60%,transparent)',
+                    boxShadow: '0 0 14px rgba(84,104,255,.6)',
+                  }}
+                />
+                {/* Aktiver Punkt am Spine-Kopf */}
+                <div
+                  aria-hidden
+                  className="absolute left-[3px] top-[20px] h-[14px] w-[14px] rounded-full border-2 border-snippt-glow1 bg-snippt-bg shadow-[0_0_10px] shadow-snippt-glow1"
+                />
+
+                {/* ── Jetzt dran ────────────────────────────────── */}
+                <div
+                  className="rounded-2xl p-[13px]"
+                  style={{
+                    backgroundImage:
+                      'radial-gradient(120% 120% at 0% 0%, rgba(84,104,255,.22), transparent 60%)',
+                    boxShadow: '0 0 0 1px rgba(84,104,255,.45)',
+                  }}
+                >
+                  <div className="text-[10px] uppercase tracking-[0.16em] text-snippt-glow2">
+                    Jetzt dran
+                  </div>
+                  <div className="mt-[4px] flex items-center justify-between">
+                    <b className="text-[14px] font-semibold text-snippt-ink">
+                      {jetzt.name}
+                    </b>
+                    <span className="inline-flex items-center gap-[5px] text-[11px] text-snippt-da">
+                      <i className={`h-[6px] w-[6px] rounded-full ${STATUS_META.da.dot}`} />
+                      ist da
+                    </span>
+                  </div>
+                </div>
+
+                {/* ── Warteschlange ─────────────────────────────── */}
+                {wartend.map((eintrag) => {
+                  const meta = STATUS_META[eintrag.status]
+                  const istIch = eintrag.ichBin === true
+
+                  return (
+                    <div
+                      key={eintrag.id}
+                      className="rounded-2xl p-[13px]"
+                      style={
+                        istIch
+                          ? {
+                              border: '1px solid rgba(43,231,255,.35)',
+                              background:
+                                'radial-gradient(100% 100% at 0% 0%, rgba(43,231,255,.10), transparent 60%), #141420',
+                            }
+                          : {
+                              border: '1px solid rgba(255,255,255,.07)',
+                              background: '#141420',
+                            }
+                      }
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {istIch && (
+                            <span
+                              className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.10em]"
+                              style={{
+                                background: 'rgba(43,231,255,.15)',
+                                color: '#2BE7FF',
+                              }}
+                            >
+                              Du
+                            </span>
+                          )}
+                          <b
+                            className="text-[14px] font-semibold"
+                            style={{ color: istIch ? '#2BE7FF' : '#F4F2EE' }}
+                          >
+                            {eintrag.name}
+                          </b>
+                        </div>
+                        <span
+                          className="inline-flex items-center gap-[5px] text-[11px]"
+                          style={{ color: istIch ? '#2BE7FF' : '#9D9BAB' }}
+                        >
+                          <i className={`h-[6px] w-[6px] rounded-full ${meta.dot}`} />
+                          {meta.label}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </section>
+
+          {/* ── Conversion Teaser ─────────────────────────────────── */}
+          <ConversionTeaser />
+
+          {/* ── Footer ────────────────────────────────────────────── */}
+          <footer className="border-t border-white/[0.06] pt-5 text-[11px] text-snippt-faint">
+            Mockup mit Demo-Daten · nicht in Echtzeit
+          </footer>
+
         </div>
-        <div className="space-y-2">
-          {andereFriseure.map(({ friseur, freiAb }) => (
-            <FriseurZeile key={friseur.id} friseur={friseur} freiAbUhrzeit={freiAb} />
-          ))}
-        </div>
-      </section>
-
-      <ConversionTeaser friseurName={marco.name.split(' ')[0]} />
-
-      <footer className="border-t border-coal/10 pt-6 text-xs text-coal/45">
-        Mockup mit Demo-Daten aus{' '}
-        <code className="rounded bg-coal/5 px-1.5 py-0.5 font-mono text-[11px] text-coal/70">
-          lib/mockData.ts
-        </code>{' '}
-        — keine API, keine Logik außer Aggregation.
-      </footer>
-    </div>
-
-    {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img
-      src="/barber-hero-clean.png"
-      alt="Snippt Barbershop"
-      className="absolute right-2 top-2 w-16 xl:right-8 xl:top-8 xl:w-[260px]"
-    />
-    </div>
+      </div>
+    </>
   )
 }

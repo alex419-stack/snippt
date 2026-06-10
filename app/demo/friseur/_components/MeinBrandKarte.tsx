@@ -1,42 +1,61 @@
 import { Star } from 'lucide-react'
-import type { Friseur } from '@/lib/mockData'
 
 /**
- * MeinBrandKarte — Personalbranding-Karte für den eingeloggten Friseur.
- *
- * Dark-Mode: bg-surface statt bg-white/60.
- * Eigenname "Marco Lehmann" in Playfair Display Serif.
+ * MeinBrandKarte — Personalbranding-Karte für Marco.
+ * Dark/Glow-Design (SG2-Palette). Statischer Mock-Inhalt.
  * Server Component.
  */
-export function MeinBrandKarte({ friseur }: { friseur: Friseur }) {
+
+type BrandDaten = {
+  name: string
+  foto: string
+  spezialitaet: string
+  bio: string
+  jahreDerErfahrung: number
+  bewertung: number
+  bewertungAnzahl: number
+  stammkundenProzent: number
+  stilTags: string[]
+  socialProofSatz: string
+}
+
+export function MeinBrandKarte({ daten }: { daten: BrandDaten }) {
   return (
     <section className="space-y-3">
-      <div className="flex items-center gap-3 label-caps text-gold">
-        <span className="h-px w-6 bg-gold" />
+      {/* Abschnitt-Label */}
+      <div className="text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
         Mein Brand
       </div>
 
-      <article className="space-y-4 rounded-2xl border border-bone/10 bg-surface p-5">
+      {/* Karte */}
+      <article
+        className="rounded-2xl border border-white/[0.07] bg-snippt-surface p-5 space-y-4"
+        style={{
+          backgroundImage:
+            'radial-gradient(90% 80% at 100% 0%, rgba(43,231,255,.06), transparent 60%)',
+        }}
+      >
         {/* Profil-Zeile */}
         <div className="flex items-start gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={friseur.foto}
-            alt={friseur.name}
-            className="h-16 w-16 flex-shrink-0 rounded-xl border border-bone/10 object-cover"
+            src={daten.foto}
+            alt={daten.name}
+            className="h-[60px] w-[60px] flex-shrink-0 rounded-xl border border-white/[0.08] object-cover"
           />
-          <div className="min-w-0 space-y-1">
-            <h2 className="text-h2 leading-tight text-ink">
-              {friseur.name}
+          <div className="min-w-0 space-y-[5px]">
+            <h2 className="font-display text-[18px] font-semibold leading-tight tracking-tight text-snippt-ink">
+              {daten.name}
             </h2>
-            <p className="text-sm text-coal/65">{friseur.spezialitaet}</p>
-            <div className="mt-1.5 flex flex-wrap gap-1">
-              {friseur.stilrichtung.map((s) => (
+            <p className="text-[13px] text-snippt-muted">{daten.spezialitaet}</p>
+            {/* Stil-Tags */}
+            <div className="flex flex-wrap gap-[6px] pt-[2px]">
+              {daten.stilTags.map((tag) => (
                 <span
-                  key={s}
-                  className="inline-flex items-center rounded-full bg-bone/8 px-2.5 py-0.5 text-[11px] text-coal/65"
+                  key={tag}
+                  className="inline-flex items-center rounded-full border border-white/[0.08] bg-snippt-surface2 px-[9px] py-[3px] text-[11px] text-snippt-muted"
                 >
-                  {s}
+                  {tag}
                 </span>
               ))}
             </div>
@@ -44,30 +63,34 @@ export function MeinBrandKarte({ friseur }: { friseur: Friseur }) {
         </div>
 
         {/* Bio */}
-        <p className="text-sm leading-relaxed text-coal/75">{friseur.bio}</p>
+        <p className="text-[13px] leading-relaxed text-snippt-muted">
+          {daten.bio}
+        </p>
 
-        <div className="border-t border-bone/10" />
+        {/* Social-Proof-Satz */}
+        <p className="text-[12px] italic leading-relaxed text-snippt-faint">
+          „{daten.socialProofSatz}"
+        </p>
+
+        {/* Trennlinie */}
+        <div className="border-t border-white/[0.06]" />
 
         {/* Kennzahlen */}
         <div className="grid grid-cols-3 gap-3 text-center">
-          <StatBlock wert={`${friseur.jahre_erfahrung} J.`} label="Erfahrung" />
-          {friseur.social_proof.bewertung_durchschnitt != null && (
-            <StatBlock
-              wert={String(friseur.social_proof.bewertung_durchschnitt)}
-              label={`${friseur.social_proof.bewertung_anzahl} Bew.`}
-              stern
-            />
-          )}
           <StatBlock
-            wert={`${Math.round(friseur.stammkunden_anteil * 100)}%`}
-            label="Stammkunden"
+            wert={`${daten.jahreDerErfahrung} J.`}
+            label="Erfahrung"
           />
-        </div>
-
-        {/* Trend */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-coal/50">Trend 30 Tage</span>
-          <TrendLabel trend={friseur.trend_30_tage} />
+          <StatBlock
+            wert={String(daten.bewertung)}
+            label={`${daten.bewertungAnzahl} Bew.`}
+            stern
+          />
+          <StatBlock
+            wert={`${daten.stammkundenProzent}%`}
+            label="Stammkunden"
+            akzentGlow
+          />
         </div>
       </article>
     </section>
@@ -78,37 +101,31 @@ function StatBlock({
   wert,
   label,
   stern = false,
+  akzentGlow = false,
 }: {
   wert: string
   label: string
   stern?: boolean
+  akzentGlow?: boolean
 }) {
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-center gap-1">
+    <div className="space-y-[4px]">
+      <div className="flex items-center justify-center gap-[4px]">
         {stern && (
-          <Star className="h-3.5 w-3.5 fill-gold text-gold" strokeWidth={0} />
+          <Star
+            className="h-[13px] w-[13px] fill-snippt-ember text-snippt-ember"
+            strokeWidth={0}
+          />
         )}
-        <span className="font-sans text-lg font-semibold tabular-nums text-ink">
+        <span
+          className={`font-display text-[18px] font-semibold tabular-nums ${
+            akzentGlow ? 'text-snippt-da' : 'text-snippt-ink'
+          }`}
+        >
           {wert}
         </span>
       </div>
-      <span className="block text-[11px] text-coal/55">{label}</span>
+      <span className="block text-[11px] text-snippt-faint">{label}</span>
     </div>
   )
-}
-
-function TrendLabel({
-  trend,
-}: {
-  trend: 'wachsend' | 'stabil' | 'schrumpfend'
-}) {
-  const map = {
-    wachsend:    { label: 'Wachsend',    farbe: 'text-gold font-semibold' },
-    stabil:      { label: 'Stabil',      farbe: 'text-coal/55' },
-    schrumpfend: { label: 'Rückläufig',  farbe: 'text-coal/45' },
-  } as const
-
-  const { label, farbe } = map[trend]
-  return <span className={`text-xs ${farbe}`}>{label}</span>
 }

@@ -1,45 +1,84 @@
-import type { Friseur } from '@/lib/mockData'
+// Statische Mock-Daten — kein Backend, kein Server Action.
+const marco = {
+  bio: 'Ich schneide seit 11 Jahren. Jeder Kopf ist anders — ich nehme mir die Zeit, die er braucht. Kein Fließband, keine versprochenen Uhrzeiten. Dafür weißt du, dass du bei mir in guten Händen bist.',
+  jahreErfahrung: 11,
+  stilTags: ['Fade', 'Skin Fade', 'Textured Crop', 'Bart', 'Klassisch'],
+  bewertungAnzahl: 134,
+}
 
 /**
- * TrustSignale — Erfahrung, Stammkunden-Anteil, Stilrichtungen, Bio.
- * Zeigt dem Erstkunden warum er wiederkommen sollte.
- * Server Component.
+ * TrustSignale — Bio, Erfahrungs-Badge, Stil-Tags, Bewertungs-Hinweis.
+ * Zeigt dem Erstkunden, warum Marco sein Friseur werden sollte.
+ * Server Component, rein presentational.
  */
-export function TrustSignale({ friseur }: { friseur: Friseur }) {
+export function TrustSignale() {
   return (
     <section className="space-y-5">
-      {/* Erfahrung + Stammkunden als 2er-Grid */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-bone/10 bg-surface p-4 space-y-1">
-          <p className="text-2xl font-semibold tabular-nums text-ink">
-            {friseur.jahre_erfahrung}
-          </p>
-          <p className="text-xs text-coal/55">Jahre Erfahrung</p>
+      {/* Bio */}
+      <p className="text-[14px] leading-relaxed text-snippt-muted">{marco.bio}</p>
+
+      {/* Erfahrungs-Badge + Bewertungs-Badge nebeneinander */}
+      <div className="flex flex-wrap gap-3">
+        {/* Jahre-Erfahrung */}
+        <div
+          className="flex items-center gap-[9px] rounded-[12px] px-[14px] py-[10px]"
+          style={{
+            background: 'rgba(84,104,255,.08)',
+            border: '1px solid rgba(84,104,255,.18)',
+          }}
+        >
+          <span
+            className="font-display text-[22px] font-semibold leading-none"
+            style={{
+              background: 'linear-gradient(180deg,#fff,#b9c0ff)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+            }}
+          >
+            {marco.jahreErfahrung}
+          </span>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-snippt-muted">
+            Jahre<br />Erfahrung
+          </span>
         </div>
-        <div className="rounded-xl border border-bone/10 bg-surface p-4 space-y-1">
-          <p className="text-2xl font-semibold tabular-nums text-ink">
-            {Math.round(friseur.stammkunden_anteil * 100)}%
-          </p>
-          <p className="text-xs text-coal/55">Stammkunden</p>
+
+        {/* Bewertungs-Badge */}
+        <div
+          className="flex items-center gap-[9px] rounded-[12px] px-[14px] py-[10px]"
+          style={{
+            background: 'rgba(43,231,255,.06)',
+            border: '1px solid rgba(43,231,255,.14)',
+          }}
+        >
+          <span
+            className="font-display text-[22px] font-semibold leading-none"
+            style={{
+              background: 'linear-gradient(180deg,#fff,#a0f2ff)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+            }}
+          >
+            {marco.bewertungAnzahl}
+          </span>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-snippt-muted">
+            Kunden<br />bewertet
+          </span>
         </div>
       </div>
 
-      {/* Stilrichtungen */}
-      <div className="flex flex-wrap gap-2">
-        {friseur.stilrichtung.map((s) => (
+      {/* Stil-Tags */}
+      <div className="flex flex-wrap gap-[7px]">
+        {marco.stilTags.map((tag) => (
           <span
-            key={s}
-            className="rounded-full border border-bone/15 bg-surface px-3 py-1 text-xs font-medium text-coal/70"
+            key={tag}
+            className="rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-[5px] text-[12px] text-snippt-ink"
           >
-            {s}
+            {tag}
           </span>
         ))}
       </div>
-
-      {/* Bio */}
-      <blockquote className="border-l-2 border-gold/40 pl-4">
-        <p className="text-sm leading-relaxed text-coal/75 italic">{friseur.bio}</p>
-      </blockquote>
     </section>
   )
 }
