@@ -1,5 +1,13 @@
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
-import { fertigNaechster } from '../actions'
+import { fertigNaechster, belohnungEinloesen, eintragEntfernen } from '../actions'
+import { BestaetigungsButton } from './BestaetigungsButton'
+
+// Dashboard-spezifische Erweiterung des Reihen-Eintrags um Stempelkarten-Info.
+// Bewusst hier (nicht in mockQueue), da mockQueue ein geteilter Mock-Typ ist.
+export type FriseurQueueEntry = QueueEntry & {
+  kundeId: string | null
+  stempelVoll: boolean
+}
 
 // Status-Darstellung: Punkt-Farbe + Text. Spiegelt das freigegebene Design (SG2).
 const STATUS_META: Record<QueueStatus, { dot: string; label: string }> = {
@@ -8,7 +16,7 @@ const STATUS_META: Record<QueueStatus, { dot: string; label: string }> = {
   keine_antwort: { dot: 'bg-snippt-still',                                   label: 'keine Antwort' },
 }
 
-function StatusChip({ entry }: { entry: QueueEntry }) {
+function StatusChip({ entry }: { entry: FriseurQueueEntry }) {
   const meta = STATUS_META[entry.status]
   return (
     <span className="mt-[7px] inline-flex items-center gap-[6px] text-[11px] tracking-[0.04em] text-snippt-muted">
@@ -18,7 +26,7 @@ function StatusChip({ entry }: { entry: QueueEntry }) {
   )
 }
 
-export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
+export function QueueBoard({ entries }: { entries: FriseurQueueEntry[] }) {
   const [now, ...rest] = entries
 
   return (
@@ -53,6 +61,11 @@ export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
             <span className="text-[12px] text-snippt-faint">wartet {now.wartetMin} Min</span>
           </div>
           <StatusChip entry={now} />
+          {now.stempelVoll && (
+            <div className="mt-[10px] inline-flex items-center gap-[6px] rounded-full border border-snippt-ember/40 bg-snippt-ember/10 px-[10px] py-[4px] text-[11px] font-medium text-snippt-ember">
+              ⭐ Karte voll — Belohnung fällig
+            </div>
+          )}
           <form action={fertigNaechster}>
             <input type="hidden" name="eintragId" value={now.id} />
             <button
@@ -66,6 +79,27 @@ export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
               Fertig → Nächsten aufrufen
             </button>
           </form>
+          {now.stempelVoll && (
+            <form action={belohnungEinloesen}>
+              <input type="hidden" name="eintragId" value={now.id} />
+              <button
+                type="submit"
+                className="mt-[10px] flex w-full items-center justify-center gap-2 rounded-[13px] border border-snippt-ember/50 bg-snippt-ember/10 p-[13px] text-[14px] font-semibold text-snippt-ember"
+              >
+                ⭐ Belohnung einlösen (gratis)
+              </button>
+            </form>
+          )}
+          <div className="mt-[10px] flex justify-end">
+            <BestaetigungsButton
+              action={eintragEntfernen}
+              feldName="eintragId"
+              feldWert={now.id}
+              label="Entfernen"
+              bestaetigung="Aus der Reihe entfernen?"
+              variante="dezent"
+            />
+          </div>
         </div>
       )}
 
@@ -80,6 +114,21 @@ export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
             <span className="text-[12px] text-snippt-faint">seit {entry.wartetMin} Min</span>
           </div>
           <StatusChip entry={entry} />
+          {entry.stempelVoll && (
+            <div className="mt-[8px] inline-flex items-center gap-[5px] text-[11px] font-medium text-snippt-ember">
+              ⭐ Karte voll
+            </div>
+          )}
+          <div className="mt-[8px] flex justify-end">
+            <BestaetigungsButton
+              action={eintragEntfernen}
+              feldName="eintragId"
+              feldWert={entry.id}
+              label="Entfernen"
+              bestaetigung="Entfernen?"
+              variante="dezent"
+            />
+          </div>
         </div>
       ))}
     </div>

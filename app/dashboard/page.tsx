@@ -4,6 +4,10 @@ import Link from 'next/link'
 import { QueueBoard } from './_components/QueueBoard'
 import { AutoRefresh } from '@/app/_components/AutoRefresh'
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
+import { istKarteVoll } from '@/lib/stempel'
+import type { FriseurQueueEntry } from './_components/QueueBoard'
+import { terminAbschliessen, terminAbsagen } from './actions'
+import { BestaetigungsButton } from './_components/BestaetigungsButton'
 
 const AKTIV = ['wartend', 'unterwegs', 'da', 'aufgerufen']
 
@@ -85,7 +89,7 @@ export default async function DashboardPage() {
       .from('termin')
       .select('id, datum, gast_name, gast_telefon, status')
       .eq('friseur_id', friseur?.id ?? '')
-      .neq('status', 'abgesagt')
+      .in('status', ['ausstehend', 'bestaetigt'])
       .gte('datum', heuteStart.toISOString())
       .order('datum', { ascending: true })
 
@@ -110,14 +114,34 @@ export default async function DashboardPage() {
               liste.map((t) => {
                 const d = new Date(t.datum as string)
                 return (
-                  <div key={t.id as string} className="flex items-center justify-between rounded-2xl border border-white/[0.07] bg-snippt-surface p-[15px]">
-                    <div>
-                      <b className="text-[15px] font-semibold text-snippt-ink">{(t.gast_name as string | null)?.trim() || 'Gast'}</b>
-                      {t.gast_telefon && <div className="text-[12px] text-snippt-faint">{t.gast_telefon as string}</div>}
+                  <div key={t.id as string} className="rounded-2xl border border-white/[0.07] bg-snippt-surface p-[15px]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <b className="text-[15px] font-semibold text-snippt-ink">{(t.gast_name as string | null)?.trim() || 'Gast'}</b>
+                        {t.gast_telefon && <div className="text-[12px] text-snippt-faint">{t.gast_telefon as string}</div>}
+                      </div>
+                      <div className="text-right">
+                        <div className="font-display text-[16px] text-snippt-ink">{pad(d.getHours())}:{pad(d.getMinutes())}</div>
+                        <div className="text-[12px] text-snippt-faint">{tagText(d)}</div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="font-display text-[16px] text-snippt-ink">{pad(d.getHours())}:{pad(d.getMinutes())}</div>
-                      <div className="text-[12px] text-snippt-faint">{tagText(d)}</div>
+                    <div className="mt-[12px] flex items-center justify-end gap-2">
+                      <BestaetigungsButton
+                        action={terminAbsagen}
+                        feldName="terminId"
+                        feldWert={t.id as string}
+                        label="Absagen"
+                        bestaetigung="Termin absagen?"
+                        variante="gefahr"
+                      />
+                      <BestaetigungsButton
+                        action={terminAbschliessen}
+                        feldName="terminId"
+                        feldWert={t.id as string}
+                        label="Erledigt"
+                        bestaetigung="Als erledigt markieren?"
+                        variante="primaer"
+                      />
                     </div>
                   </div>
                 )
@@ -132,18 +156,45 @@ export default async function DashboardPage() {
   // ── Warteschlangen-Modus ──────────────────────────────────────
   const { data: rows } = await supabase
     .from('warteschlange')
-    .select('id, gast_name, status, eingereiht_at')
+    .select('id, gast_name, status, eingereiht_at, kunde_id')
     .eq('friseur_id', friseur?.id ?? '')
     .in('status', AKTIV)
     .order('eingereiht_at', { ascending: true })
 
+  const ziel = (friseur?.stempel_anzahl as number | null) ?? null
+
+  // Offene Stempel je Kunde der aktuellen Reihe in einer Sammelabfrage holen.
+  const kundenIds = Array.from(
+    new Set((rows ?? []).map((r) => r.kunde_id as string | null).filter((id): id is string => !!id)),
+  )
+  const offenProKunde = new Map<string, number>()
+  // Ohne konfiguriertes Ziel bleibt offenProKunde leer -> istKarteVoll ergibt immer false.
+  if (kundenIds.length > 0 && ziel) {
+    const { data: stempelRows } = await supabase
+      .from('stempel')
+      .select('kunde_id')
+      .eq('friseur_id', friseur?.id ?? '')
+      .is('eingeloest_at', null)
+      .in('kunde_id', kundenIds)
+    for (const s of stempelRows ?? []) {
+      const k = s.kunde_id as string
+      offenProKunde.set(k, (offenProKunde.get(k) ?? 0) + 1)
+    }
+  }
+
   const jetzt = Date.now()
-  const entries: QueueEntry[] = (rows ?? []).map((r) => ({
-    id: r.id as string,
-    name: (r.gast_name as string | null)?.trim() || 'Gast',
-    wartetMin: Math.max(0, Math.round((jetzt - new Date(r.eingereiht_at as string).getTime()) / 60000)),
-    status: mapStatus(r.status as string),
-  }))
+  const entries: FriseurQueueEntry[] = (rows ?? []).map((r) => {
+    const kundeId = (r.kunde_id as string | null) ?? null
+    const offen = kundeId ? offenProKunde.get(kundeId) ?? 0 : 0
+    return {
+      id: r.id as string,
+      name: (r.gast_name as string | null)?.trim() || 'Gast',
+      wartetMin: Math.max(0, Math.round((jetzt - new Date(r.eingereiht_at as string).getTime()) / 60000)),
+      status: mapStatus(r.status as string),
+      kundeId,
+      stempelVoll: istKarteVoll(offen, ziel),
+    }
+  })
 
   const heuteStart = new Date()
   heuteStart.setHours(0, 0, 0, 0)
