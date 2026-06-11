@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { normalisiereTelefon } from '@/lib/telefon'
 
 type Phase = 'idle' | 'form' | 'sending' | 'done' | 'error'
 
@@ -34,8 +35,16 @@ export function AnstellenButton({ slug }: { slug: string }) {
   }, [])
 
   async function absenden() {
-    setPhase('sending')
     setFehler(null)
+
+    // Handynummer ist Pflicht: darueber kommt die Du-bist-dran-Nachricht.
+    if (!normalisiereTelefon(telefon)) {
+      setFehler('Bitte gib deine Handynummer ein — darüber sagt dir dein Friseur Bescheid, wenn du dran bist.')
+      setPhase('error')
+      return
+    }
+
+    setPhase('sending')
     if (name.trim()) window.localStorage.setItem('snippt_name', name.trim())
 
     const supabase = createClient()
@@ -93,14 +102,14 @@ export function AnstellenButton({ slug }: { slug: string }) {
           type="tel"
           value={telefon}
           onChange={(e) => setTelefon(e.target.value)}
-          placeholder="Handynummer (für Bescheid, optional)"
+          placeholder="Handynummer (für die Benachrichtigung)"
           className="w-full rounded-[14px] border border-white/[0.1] bg-white/[0.03] px-4 py-[14px] text-[15px] text-snippt-ink placeholder:text-snippt-faint outline-none focus:border-snippt-glow1/60"
         />
         {fehler && <p className="text-[13px] text-snippt-weg">{fehler}</p>}
         <button
           type="button"
           onClick={absenden}
-          disabled={phase === 'sending' || !name.trim()}
+          disabled={phase === 'sending' || !name.trim() || !telefon.trim()}
           className="w-full rounded-[16px] p-[17px] text-[17px] font-semibold text-[#070710] disabled:opacity-50"
           style={ctaStyle}
         >
