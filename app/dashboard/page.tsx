@@ -7,7 +7,7 @@ import { AutoRefresh } from '@/app/_components/AutoRefresh'
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
 import { istKarteVoll } from '@/lib/stempel'
 import type { FriseurQueueEntry } from './_components/QueueBoard'
-import { terminAbschliessen, terminAbsagen } from './actions'
+import { terminAbschliessen, terminAbsagen, abmelden } from './actions'
 import { BestaetigungsButton } from './_components/BestaetigungsButton'
 
 const AKTIV = ['wartend', 'unterwegs', 'da', 'aufgerufen']
@@ -68,6 +68,11 @@ function Kopf({ titel, friseur, rechts, qrLink }: { titel: string; friseur: { na
               QR-Schild →
             </Link>
           )}
+          <form action={abmelden}>
+            <button type="submit" className="text-snippt-faint hover:text-snippt-ink">
+              Abmelden
+            </button>
+          </form>
         </div>
       </div>
       <span className="text-[12px] uppercase tracking-[0.14em] text-snippt-faint">{rechts}</span>

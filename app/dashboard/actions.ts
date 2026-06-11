@@ -253,6 +253,13 @@ export async function terminAbschliessen(formData: FormData) {
   revalidatePath('/dashboard')
 }
 
+// Friseur abmelden: Session beenden und zurück zum Login.
+export async function abmelden() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/login')
+}
+
 // Friseur speichert sein öffentliches Profil (Personalbranding).
 function leerZuNull(v: FormDataEntryValue | null) {
   const s = String(v ?? '').trim()
