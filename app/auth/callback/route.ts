@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const next = searchParams.get('next')
 
   // Kein Auth-Code im Query-Parameter vorhanden
   if (!code) {
@@ -18,5 +19,8 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=auth_failed`)
   }
 
-  return NextResponse.redirect(`${origin}/dashboard`)
+  // `next` nur als interne, relative Route zulassen (verhindert Open-Redirect).
+  // Wird z. B. beim Passwort-Zurücksetzen auf /passwort-neu gesetzt.
+  const ziel = next && next.startsWith('/') && !next.startsWith('//') ? next : '/dashboard'
+  return NextResponse.redirect(`${origin}${ziel}`)
 }

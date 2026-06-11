@@ -5,23 +5,33 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
-export default function LoginPage() {
+export default function PasswortNeuPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [pw, setPw] = useState('')
+  const [pw2, setPw2] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  async function handleLogin(e: React.FormEvent) {
+  async function absenden(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
     setError(null)
 
+    if (pw.length < 6) {
+      setError('Das Passwort muss mindestens 6 Zeichen haben.')
+      return
+    }
+    if (pw !== pw2) {
+      setError('Die beiden Passwörter stimmen nicht überein.')
+      return
+    }
+
+    setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.updateUser({ password: pw })
 
     if (error) {
-      setError(error.message)
+      // Typischer Fall: Link abgelaufen / keine gültige Sitzung
+      setError('Das hat nicht geklappt. Fordere bitte einen neuen Link an und versuch es gleich danach.')
       setLoading(false)
       return
     }
@@ -46,19 +56,12 @@ export default function LoginPage() {
       />
       <div className="relative z-[1] w-full max-w-sm px-6 py-16">
         <div className="text-center">
-          <Link href="/" className="font-display text-3xl font-semibold tracking-tight">
-            <span
-              style={{
-                background: 'linear-gradient(100deg,#5468FF,#2BE7FF)',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
-            >
+          <span className="font-display text-3xl font-semibold tracking-tight">
+            <span style={{ background: 'linear-gradient(100deg,#5468FF,#2BE7FF)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
               Snippt
             </span>
-          </Link>
-          <p className="mt-2 text-[14px] text-snippt-muted">Melde dich mit deiner E-Mail an.</p>
+          </span>
+          <p className="mt-2 text-[14px] text-snippt-muted">Wähle dein neues Passwort.</p>
         </div>
 
         <div className="mt-8 rounded-[20px] border border-white/[0.08] bg-snippt-surface/80 p-7">
@@ -67,42 +70,33 @@ export default function LoginPage() {
               {error}
             </div>
           )}
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={absenden} className="space-y-4">
             <div>
-              <label htmlFor="email" className="mb-[6px] block text-[12px] uppercase tracking-[0.12em] text-snippt-faint">
-                E-Mail
+              <label htmlFor="pw" className="mb-[6px] block text-[12px] uppercase tracking-[0.12em] text-snippt-faint">
+                Neues Passwort
               </label>
-              <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" className={feld} />
+              <input id="pw" type="password" value={pw} onChange={(e) => setPw(e.target.value)} required minLength={6} autoComplete="new-password" className={feld} />
             </div>
             <div>
-              <div className="mb-[6px] flex items-center justify-between">
-                <label htmlFor="password" className="block text-[12px] uppercase tracking-[0.12em] text-snippt-faint">
-                  Passwort
-                </label>
-                <Link href="/passwort-vergessen" className="text-[12px] text-snippt-glow2 hover:text-snippt-ink">
-                  Vergessen?
-                </Link>
-              </div>
-              <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" className={feld} />
+              <label htmlFor="pw2" className="mb-[6px] block text-[12px] uppercase tracking-[0.12em] text-snippt-faint">
+                Passwort wiederholen
+              </label>
+              <input id="pw2" type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} required minLength={6} autoComplete="new-password" className={feld} />
             </div>
             <button
               type="submit"
               disabled={loading}
               className="w-full rounded-[16px] p-[15px] text-[16px] font-semibold text-[#070710] disabled:opacity-50"
-              style={{
-                background: 'linear-gradient(100deg,#2BE7FF,#5468FF)',
-                boxShadow: '0 12px 34px -10px rgba(84,104,255,.8)',
-              }}
+              style={{ background: 'linear-gradient(100deg,#2BE7FF,#5468FF)', boxShadow: '0 12px 34px -10px rgba(84,104,255,.8)' }}
             >
-              {loading ? 'Wird angemeldet …' : 'Anmelden'}
+              {loading ? 'Wird gespeichert …' : 'Passwort speichern'}
             </button>
           </form>
         </div>
 
         <p className="mt-6 text-center text-[14px] text-snippt-muted">
-          Noch kein Konto?{' '}
-          <Link href="/register" className="font-medium text-snippt-glow2 hover:text-snippt-ink">
-            Registrieren
+          <Link href="/login" className="font-medium text-snippt-glow2 hover:text-snippt-ink">
+            Zurück zur Anmeldung
           </Link>
         </p>
       </div>

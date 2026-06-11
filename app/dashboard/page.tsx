@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { QueueBoard } from './_components/QueueBoard'
+import { RealtimeReihe } from './_components/RealtimeReihe'
 import { AutoRefresh } from '@/app/_components/AutoRefresh'
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
 import { istKarteVoll } from '@/lib/stempel'
@@ -43,7 +44,7 @@ const glow = (
   />
 )
 
-function Kopf({ titel, friseur, rechts }: { titel: string; friseur: { name?: string; slug?: string } | null; rechts: string }) {
+function Kopf({ titel, friseur, rechts, qrLink }: { titel: string; friseur: { name?: string; slug?: string } | null; rechts: string; qrLink?: boolean }) {
   return (
     <header className="flex items-end justify-between">
       <div>
@@ -58,9 +59,16 @@ function Kopf({ titel, friseur, rechts }: { titel: string; friseur: { name?: str
             snippt.de/{friseur?.slug ?? 'dein-name'}
           </a>
         </p>
-        <Link href="/dashboard/profil" className="mt-2 inline-block text-[12px] text-snippt-glow2 hover:text-snippt-ink">
-          Profil bearbeiten →
-        </Link>
+        <div className="mt-2 flex items-center gap-3 text-[12px]">
+          <Link href="/dashboard/profil" className="text-snippt-glow2 hover:text-snippt-ink">
+            Profil bearbeiten →
+          </Link>
+          {qrLink && (
+            <Link href="/dashboard/qr" className="text-snippt-glow2 hover:text-snippt-ink">
+              QR-Schild →
+            </Link>
+          )}
+        </div>
       </div>
       <span className="text-[12px] uppercase tracking-[0.14em] text-snippt-faint">{rechts}</span>
     </header>
@@ -209,8 +217,9 @@ export default async function DashboardPage() {
     <main className="snippt-grain relative min-h-screen overflow-hidden bg-snippt-bg font-body text-snippt-ink">
       {glow}
       <div className="relative z-[1] mx-auto w-full max-w-md px-5 pb-12 pt-12">
-        <AutoRefresh seconds={5} />
-        <Kopf titel="Deine Reihe" friseur={friseur} rechts={`${entries.length} warten`} />
+        <RealtimeReihe friseurId={friseur?.id ?? ''} />
+        <AutoRefresh seconds={25} />
+        <Kopf titel="Deine Reihe" friseur={friseur} rechts={`${entries.length} warten`} qrLink />
 
         <div className="my-5 flex gap-[10px]">
           <div className="flex-1 rounded-[14px] border border-white/[0.07] bg-white/[0.02] px-[14px] py-3">

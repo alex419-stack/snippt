@@ -171,6 +171,30 @@ Das ist überschaubar — die meiste Wartezeit steckt in der Meta-Prüfung, nich
 
 ---
 
+## 7b. Stand der Technik (11.06.2026): Code ist fertig
+
+Der Versand ist eingebaut und getestet. Sobald jemand in der Reihe aufgerufen wird („nächster aufrufen" im Dashboard), schickt Snippt automatisch die „du bist dran"-Nachricht — **vorausgesetzt, die vier Zugangswerte sind hinterlegt.** Solange sie fehlen, läuft alles normal weiter, es geht nur keine Nachricht raus (kein Fehler im Laden). Die Nachricht geht außerdem nur an Kunden, die beim Anstellen ihre **Handynummer** angegeben haben.
+
+**Was du noch tun musst:** diese vier Werte bei Vercel eintragen (Projekt „snippt" → Settings → Environment Variables):
+
+| Variable | Was es ist | Woher |
+|---|---|---|
+| `WHATSAPP_TOKEN` | dauerhaftes Zugriffstoken | Meta → System-User-Token |
+| `WHATSAPP_PHONE_NUMBER_ID` | ID der WhatsApp-Nummer (**nicht** die Nummer selbst) | Meta → WhatsApp → API-Setup |
+| `WHATSAPP_TEMPLATE_NAME` | Name der genehmigten Vorlage | wie bei Meta benannt |
+| `WHATSAPP_TEMPLATE_SPRACHE` | Sprachcode der Vorlage (z. B. `de`) | wie bei Meta angelegt |
+
+**Wichtig — die Vorlage muss genau zwei Platzhalter haben**, in dieser Reihenfolge:
+- `{{1}}` = Name des Kunden
+- `{{2}}` = Name des Friseurs
+
+Beispiel-Text für die Vorlage (Kategorie **Utility**, damit günstig/kostenlos):
+> Hallo {{1}}, du bist dran bei {{2}}! Komm bitte zu deinem Friseur.
+
+Wenn du die Vorlage anders aufbaust (z. B. andere Anzahl Platzhalter), passt der Code nicht mehr — dann kurz Bescheid sagen, ich passe ihn an. Nach dem Eintragen bei Vercel einmal neu veröffentlichen (Redeploy), dann ist der Versand scharf.
+
+---
+
 ## 8. Reihenfolge in Kurzform (deine Checkliste)
 
 1. ☐ Facebook-/Meta-Konto bereit (Schritt 3.1)

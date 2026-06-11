@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { waehleEinzuloesendeStempel } from '@/lib/stempel'
+import { sendeDuBistDran } from '@/lib/whatsapp'
 
 const AKTIV = ['wartend', 'unterwegs', 'da', 'aufgerufen']
 
@@ -46,7 +47,7 @@ async function abschliessenUndNaechsten(
   // 3. Nächsten aktiven Eintrag (frühester) aufrufen
   const { data: naechster } = await supabase
     .from('warteschlange')
-    .select('id')
+    .select('id, gast_name, gast_telefon')
     .eq('friseur_id', friseur.id)
     .in('status', AKTIV)
     .order('eingereiht_at', { ascending: true })
@@ -59,6 +60,14 @@ async function abschliessenUndNaechsten(
       .update({ status: 'aufgerufen', aufgerufen_at: new Date().toISOString() })
       .eq('id', naechster.id)
       .eq('friseur_id', friseur.id)
+
+    // „Du bist dran"-WhatsApp an den aufgerufenen Kunden. Robust: bricht den
+    // Ablauf nie ab; ohne hinterlegte Meta-Konfiguration passiert einfach nichts.
+    await sendeDuBistDran({
+      telefon: (naechster.gast_telefon as string | null) ?? null,
+      kundeName: (naechster.gast_name as string | null) ?? null,
+      friseurName: friseur.name,
+    })
   }
 
   revalidatePath('/dashboard')
@@ -116,15 +125,15 @@ export async function belohnungEinloesen(formData: FormData) {
 // wiederkehrende Auth→Friseur-Abfrage in den Aktionen unten.
 async function eingeloggterFriseur(
   supabase: SupabaseServerClient,
-): Promise<{ id: string } | null> {
+): Promise<{ id: string; name: string } | null> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
   const { data } = await supabase
     .from('friseur')
-    .select('id')
+    .select('id, name')
     .eq('user_id', user.id)
     .maybeSingle()
-  return (data as { id: string } | null) ?? null
+  return (data as { id: string; name: string } | null) ?? null
 }
 
 // Friseur entfernt einen Eintrag aus der Reihe (No-Show oder Storno). Setzt ihn

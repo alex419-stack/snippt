@@ -5,11 +5,18 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
+// Synchron zur DB-Funktion public.is_slug_reserved (Migration 009).
+// Bei Änderungen beide Stellen anpassen.
 const RESERVED_SLUGS = new Set([
-  'dashboard', 'login', 'register', 'auth', 'api',
-  'admin', 'settings', 'profile', 'help', 'about',
-  'contact', 'pricing', 'terms', 'privacy', 'imprint',
+  'login', 'register', 'auth', 'dashboard', 'demo', 'api', 'admin', 'settings',
+  'profile', 'help', 'about', 'contact', 'pricing', 'terms', 'privacy', 'imprint',
+  'manifest', 'icon', 'apple-icon', 'favicon', 'robots', 'sitemap', 'sw',
+  'service-worker', '_next', 'static', 'public', 'app', 'snippt',
 ])
+
+// Erlaubtes Format: Kleinbuchstaben, Zahlen, Bindestrich; 2–32 Zeichen; nicht am Rand "-".
+// Synchron zum DB-Constraint friseur_slug_format (Migration 009).
+const SLUG_FORMAT = /^[a-z0-9][a-z0-9-]{0,30}[a-z0-9]$/
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -18,6 +25,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   function generateSlug(value: string) {
@@ -28,25 +36,57 @@ export default function RegisterPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setInfo(null)
 
-    if (RESERVED_SLUGS.has(slug)) {
-      setError(`„${slug}" ist eine reservierte Adresse. Bitte wähle einen anderen Namen.`)
+    const slugWert = slug.trim().toLowerCase()
+
+    // Format prüfen (gleiche Regel wie der DB-Constraint)
+    if (!SLUG_FORMAT.test(slugWert)) {
+      setError('Die Adresse darf nur Kleinbuchstaben, Zahlen und Bindestriche enthalten (2–32 Zeichen, nicht mit Bindestrich am Anfang oder Ende).')
+      setLoading(false)
+      return
+    }
+
+    if (RESERVED_SLUGS.has(slugWert)) {
+      setError(`„${slugWert}" ist eine reservierte Adresse. Bitte wähle einen anderen Namen.`)
       setLoading(false)
       return
     }
 
     const supabase = createClient()
-    const { error: signUpError } = await supabase.auth.signUp({
+
+    // Adresse schon vergeben? Freundliche Meldung statt kryptischem Datenbank-Fehler.
+    const { data: vorhanden } = await supabase
+      .from('friseur')
+      .select('slug')
+      .eq('slug', slugWert)
+      .maybeSingle()
+
+    if (vorhanden) {
+      setError(`Die Adresse „snippt.de/${slugWert}" ist schon vergeben. Bitte wähle eine andere.`)
+      setLoading(false)
+      return
+    }
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
-        data: { name, slug },
+        data: { name, slug: slugWert },
       },
     })
 
     if (signUpError) {
       setError(signUpError.message)
+      setLoading(false)
+      return
+    }
+
+    // Ist die E-Mail-Bestätigung aktiv, gibt es noch keine Session. Dann NICHT aufs
+    // Dashboard leiten (würde sofort zurückgeworfen), sondern Bestätigungs-Hinweis zeigen.
+    if (!data.session) {
+      setInfo('Fast geschafft! Wir haben dir eine E-Mail geschickt — bestätige sie, um dein Profil freizuschalten.')
       setLoading(false)
       return
     }
@@ -91,6 +131,11 @@ export default function RegisterPage() {
           {error && (
             <div className="mb-5 rounded-[12px] border border-snippt-weg/30 bg-snippt-weg/10 px-4 py-3 text-[13px] text-snippt-weg">
               {error}
+            </div>
+          )}
+          {info && (
+            <div className="mb-5 rounded-[12px] border border-snippt-glow2/30 bg-snippt-glow2/10 px-4 py-3 text-[13px] text-snippt-glow2">
+              {info}
             </div>
           )}
           <form onSubmit={handleRegister} className="space-y-4">
