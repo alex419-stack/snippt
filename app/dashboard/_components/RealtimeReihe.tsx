@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 // Live-Aktualisierung der Reihe über Supabase Realtime. Sobald sich an den
-// eigenen Warteschlangen-Einträgen etwas ändert (anstellen, einchecken,
+// eigenen Warteschlangen-Einträgen etwas ändert (anstellen, „ist da",
 // aufrufen, fertig), wird die Server-Komponente sofort neu geladen — kein
 // Warten auf den nächsten Auto-Refresh. RLS sorgt dafür, dass nur die eigenen
 // Einträge gestreamt werden (Abo läuft mit dem JWT des eingeloggten Friseurs).

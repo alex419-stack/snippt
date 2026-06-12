@@ -1,5 +1,5 @@
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
-import { fertigNaechster, belohnungEinloesen, eintragEntfernen } from '../actions'
+import { fertigNaechster, belohnungEinloesen, eintragEntfernen, praesenzUmschalten } from '../actions'
 import { BestaetigungsButton } from './BestaetigungsButton'
 
 // Dashboard-spezifische Erweiterung des Reihen-Eintrags um Stempelkarten-Info.
@@ -7,6 +7,30 @@ import { BestaetigungsButton } from './BestaetigungsButton'
 export type FriseurQueueEntry = QueueEntry & {
   kundeId: string | null
   stempelVoll: boolean
+  istDa: boolean
+  istAufgerufen: boolean
+}
+
+// „ist da"-Schalter: markiert einen Wartenden als angekommen (oder zurück auf
+// wartend). Ein Tipp, kein Scan. Ändert die Position nicht.
+function PraesenzToggle({ entry }: { entry: FriseurQueueEntry }) {
+  const ziel = entry.istDa ? 'wartend' : 'da'
+  return (
+    <form action={praesenzUmschalten}>
+      <input type="hidden" name="eintragId" value={entry.id} />
+      <input type="hidden" name="zielStatus" value={ziel} />
+      <button
+        type="submit"
+        className={
+          entry.istDa
+            ? 'rounded-full border border-snippt-da/50 bg-snippt-da/10 px-[11px] py-[5px] text-[12px] font-medium text-snippt-da'
+            : 'rounded-full border border-white/[0.14] px-[11px] py-[5px] text-[12px] font-medium text-snippt-muted hover:border-snippt-da/50 hover:text-snippt-da'
+        }
+      >
+        {entry.istDa ? '✓ ist da' : 'ist da?'}
+      </button>
+    </form>
+  )
 }
 
 // Status-Darstellung: Punkt-Farbe + Text. Spiegelt das freigegebene Design (SG2).
@@ -90,7 +114,12 @@ export function QueueBoard({ entries }: { entries: FriseurQueueEntry[] }) {
               </button>
             </form>
           )}
-          <div className="mt-[10px] flex justify-end">
+          <div className="mt-[10px] flex items-center justify-between">
+            {now.istAufgerufen ? (
+              <span className="text-[12px] text-snippt-glow2">wird gerufen …</span>
+            ) : (
+              <PraesenzToggle entry={now} />
+            )}
             <BestaetigungsButton
               action={eintragEntfernen}
               feldName="eintragId"
@@ -119,7 +148,8 @@ export function QueueBoard({ entries }: { entries: FriseurQueueEntry[] }) {
               ⭐ Karte voll
             </div>
           )}
-          <div className="mt-[8px] flex justify-end">
+          <div className="mt-[8px] flex items-center justify-between">
+            <PraesenzToggle entry={entry} />
             <BestaetigungsButton
               action={eintragEntfernen}
               feldName="eintragId"

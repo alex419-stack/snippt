@@ -13,16 +13,17 @@ export default async function QrPage() {
 
   const { data: friseur } = await supabase
     .from('friseur')
-    .select('name, slug, checkin_code')
+    .select('name, slug')
     .eq('user_id', user.id)
     .single()
   if (!friseur) redirect('/dashboard')
 
-  // Basis-URL aus dem aktuellen Host ableiten (lokal http, sonst https).
+  // QR zeigt auf die dauerhafte Eintrittstür des Friseurs. Der Kunde scannt EINMAL,
+  // speichert die Seite und kann sich ab dann jederzeit hier in die Reihe setzen.
   const h = await headers()
   const host = h.get('host') ?? 'snippt.de'
   const proto = host.startsWith('localhost') || host.startsWith('127.') ? 'http' : 'https'
-  const url = `${proto}://${host}/${friseur.slug}/checkin?c=${friseur.checkin_code}`
+  const url = `${proto}://${host}/${friseur.slug}`
 
   const qr = await QRCode.toDataURL(url, {
     width: 600,
@@ -50,8 +51,8 @@ export default async function QrPage() {
           </Link>
           <h1 className="mt-3 font-display text-2xl font-semibold tracking-tight">Dein Laden-Schild</h1>
           <p className="mt-1 text-[14px] text-snippt-muted">
-            Druck das Schild aus und stell es an deinen Platz. Kunden scannen den Code, um sich
-            als „da" anzumelden — das funktioniert nur hier vor Ort, nicht von zu Hause.
+            Druck das Schild aus und stell es an deinen Platz. Kunden scannen es einmal, speichern
+            deine Seite — und stellen sich ab dann jederzeit mit einem Tipp bei dir in die Reihe.
           </p>
         </div>
 
@@ -60,12 +61,12 @@ export default async function QrPage() {
           className="mx-auto max-w-[360px] rounded-[24px] bg-white p-8 text-center text-[#0C0C12] print:rounded-none print:shadow-none"
           style={{ boxShadow: '0 20px 60px -20px rgba(0,0,0,.6)' }}
         >
-          <div className="font-display text-[26px] font-semibold tracking-tight">Bist du dran?</div>
+          <div className="font-display text-[26px] font-semibold tracking-tight">Komm wieder zu {friseur.name}</div>
           <p className="mt-2 text-[14px] text-[#555]">
-            Scan mich, wenn du im Laden bist — dann weiß {friseur.name}, dass du da bist.
+            Scan mich — dann bist du immer nur einen Tipp davon entfernt, dich bei {friseur.name} anzustellen.
           </p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={qr} alt="QR-Code zum Einchecken" className="mx-auto mt-5 h-auto w-full max-w-[260px]" />
+          <img src={qr} alt="QR-Code zu deinem Friseur" className="mx-auto mt-5 h-auto w-full max-w-[260px]" />
           <div className="mt-4 font-display text-[19px] font-semibold tracking-tight">{friseur.name}</div>
           <div className="mt-1 text-[12px] text-[#888]">snippt.de/{friseur.slug}</div>
         </div>

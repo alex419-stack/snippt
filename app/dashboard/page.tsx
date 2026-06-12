@@ -210,6 +210,8 @@ export default async function DashboardPage() {
       status: mapStatus(r.status as string),
       kundeId,
       stempelVoll: istKarteVoll(offen, ziel),
+      istDa: (r.status as string) === 'da',
+      istAufgerufen: (r.status as string) === 'aufgerufen',
     }
   })
 

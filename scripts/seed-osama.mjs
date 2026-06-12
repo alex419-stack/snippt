@@ -60,8 +60,8 @@ const PROFIL = {
   foto_url: null, // Platzhalter „O" im Markenstil (siehe Kundenseite)
 }
 const FAKE_WARTENDE = [
-  { gast_name: 'Mehmet K.', vorMin: 22 },
-  { gast_name: 'Luca', vorMin: 13 },
+  { gast_name: 'Mehmet K.', vorMin: 22, status: 'da' },      // schon im Laden
+  { gast_name: 'Luca', vorMin: 13, status: 'wartend' },      // noch unterwegs (von zuhause)
 ]
 
 const supabase = createClient(SB_URL, ANON, { auth: { persistSession: false } })
@@ -108,7 +108,7 @@ async function main() {
   const zeilen = FAKE_WARTENDE.map((f) => ({
     friseur_id: friseurId,
     gast_name: f.gast_name,
-    status: 'da',
+    status: f.status,
     eingereiht_at: new Date(jetzt - f.vorMin * 60_000).toISOString(),
   }))
   const { error: insErr } = await supabase.from('warteschlange').insert(zeilen)

@@ -179,6 +179,28 @@ export async function walkInHinzufuegen(formData: FormData) {
   revalidatePath('/dashboard')
 }
 
+// Friseur schaltet die Präsenz eines Wartenden um: „ist da" (angekommen) oder
+// zurück auf „wartend" (doch noch nicht da). Rührt 'aufgerufen'/'fertig' nicht
+// an, damit der Aufruf-Ablauf intakt bleibt. Ändert die Position nicht.
+export async function praesenzUmschalten(formData: FormData) {
+  const eintragId = String(formData.get('eintragId') ?? '')
+  const zielStatus = String(formData.get('zielStatus') ?? '') === 'da' ? 'da' : 'wartend'
+  if (!eintragId) return
+
+  const supabase = await createClient()
+  const friseur = await eingeloggterFriseur(supabase)
+  if (!friseur) return
+
+  await supabase
+    .from('warteschlange')
+    .update({ status: zielStatus })
+    .eq('id', eintragId)
+    .eq('friseur_id', friseur.id)
+    .in('status', ['wartend', 'unterwegs', 'da'])
+
+  revalidatePath('/dashboard')
+}
+
 // Friseur sagt einen Termin ab. Setzt ihn auf 'abgesagt'. Kein Stempel.
 export async function terminAbsagen(formData: FormData) {
   const terminId = String(formData.get('terminId') ?? '')

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { AnstellenButton } from './_components/AnstellenButton'
 import { TerminBuchen } from './_components/TerminBuchen'
 import { StempelKarte } from './_components/StempelKarte'
-import { DuBistDran } from './_components/DuBistDran'
+import { MeineReihe } from './_components/MeineReihe'
 import { AutoRefresh } from '@/app/_components/AutoRefresh'
 import { POLL_SEKUNDEN } from '@/lib/demoConfig'
 
@@ -49,7 +49,7 @@ export default async function ProfilPage({ params }: Props) {
 
       <div className="relative z-[1] mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-12">
         {!istTermine && <AutoRefresh seconds={POLL_SEKUNDEN} />}
-        {!istTermine && <DuBistDran slug={slug} />}
+        {!istTermine && <MeineReihe slug={slug} />}
         {/* Live-Anzeige */}
         <div className="mb-6 flex items-center justify-between">
           <span className="inline-flex items-center gap-[7px] text-[11px] uppercase tracking-[0.16em] text-snippt-glow2">
