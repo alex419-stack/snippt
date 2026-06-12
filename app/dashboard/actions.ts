@@ -157,6 +157,28 @@ export async function eintragEntfernen(formData: FormData) {
   revalidatePath('/dashboard')
 }
 
+// Friseur setzt selbst einen Walk-In (Couch-Kunde, der die App nicht nutzt) in
+// die Reihe — nur Name, Nummer optional. Status 'da', weil er physisch da ist.
+// Kein Kunde-Soft-Account (kein Gerät/Token), daher beim Abschluss kein Stempel.
+export async function walkInHinzufuegen(formData: FormData) {
+  const name = String(formData.get('name') ?? '').trim()
+  const telefon = String(formData.get('telefon') ?? '').trim()
+  if (!name) return
+
+  const supabase = await createClient()
+  const friseur = await eingeloggterFriseur(supabase)
+  if (!friseur) return
+
+  await supabase.from('warteschlange').insert({
+    friseur_id: friseur.id,
+    gast_name: name,
+    gast_telefon: telefon || null,
+    status: 'da',
+  })
+
+  revalidatePath('/dashboard')
+}
+
 // Friseur sagt einen Termin ab. Setzt ihn auf 'abgesagt'. Kein Stempel.
 export async function terminAbsagen(formData: FormData) {
   const terminId = String(formData.get('terminId') ?? '')

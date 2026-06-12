@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { normalisiereTelefon } from '@/lib/telefon'
+import { audioFreischalten } from '@/lib/sound'
 
 type Phase = 'idle' | 'form' | 'sending' | 'done' | 'error'
 
@@ -36,6 +37,8 @@ export function AnstellenButton({ slug }: { slug: string }) {
 
   async function absenden() {
     setFehler(null)
+    // Diese Nutzer-Geste nutzen, um den späteren „Du bist dran"-Ton freizuschalten (iOS).
+    audioFreischalten()
 
     // Handynummer ist Pflicht: darueber kommt die Du-bist-dran-Nachricht.
     if (!normalisiereTelefon(telefon)) {

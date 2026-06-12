@@ -3,7 +3,11 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { QueueBoard } from './_components/QueueBoard'
 import { RealtimeReihe } from './_components/RealtimeReihe'
+import { ReihenAlarm } from './_components/ReihenAlarm'
+import { QrKarte } from './_components/QrKarte'
+import { WalkInForm } from './_components/WalkInForm'
 import { AutoRefresh } from '@/app/_components/AutoRefresh'
+import { POLL_SEKUNDEN } from '@/lib/demoConfig'
 import type { QueueEntry, QueueStatus } from '@/lib/mockQueue'
 import { istKarteVoll } from '@/lib/stempel'
 import type { FriseurQueueEntry } from './_components/QueueBoard'
@@ -223,8 +227,12 @@ export default async function DashboardPage() {
       {glow}
       <div className="relative z-[1] mx-auto w-full max-w-md px-5 pb-12 pt-12">
         <RealtimeReihe friseurId={friseur?.id ?? ''} />
-        <AutoRefresh seconds={25} />
+        <AutoRefresh seconds={POLL_SEKUNDEN} />
+        <ReihenAlarm eintraege={entries.map((e) => ({ id: e.id, name: e.name }))} />
         <Kopf titel="Deine Reihe" friseur={friseur} rechts={`${entries.length} warten`} qrLink />
+
+        {friseur?.slug && <QrKarte slug={friseur.slug as string} />}
+        <WalkInForm />
 
         <div className="my-5 flex gap-[10px]">
           <div className="flex-1 rounded-[14px] border border-white/[0.07] bg-white/[0.02] px-[14px] py-3">
